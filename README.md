@@ -13,7 +13,7 @@ Its like forth, its like basic, it has modern syntax. what alse would you ask fr
 Currently, BeCauSe can only be installed on Linux operating systems due to the fact it uses Nasm and other commands that are only availabe on Linux.
 
 To install BeCauSe, make sure to have ./bcs.py in your path
-
+Also make sure to install NASM
 ---
 
 ## Quick start
