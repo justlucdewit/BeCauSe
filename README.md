@@ -22,7 +22,7 @@ Interpreting
 $ ./bcs.py run examples/adding.sbsc
 ```
 
-Compining
+Compiling
 ```console
 $ ./bcs.py com examples/adding.sbsc
 $ ./output
