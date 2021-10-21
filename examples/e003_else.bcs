@@ -1,0 +1,16 @@
+// BCS E003
+// Coded by luke_
+// 21-10-2021
+
+// If 39 + 30 = 70
+39 30 + 70 = if
+
+	// if 0 == 1
+	0 if
+		69 .
+	else
+		23 .
+	end
+else
+	420 .
+end

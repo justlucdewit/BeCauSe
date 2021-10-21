@@ -5,25 +5,10 @@ from modules.run_program import *
 from modules.compile_program import *
 from modules.opcodes import *
 import subprocess
+from modules.parser import *
 
 def uncons(xs):
     return (xs[0], xs[1:])
-
-def parse_word(word):
-    if word == '+':
-        return (OP_ADD, )
-    elif word == '-':
-        return (OP_SUBTRACT, )
-    elif word == '.':
-        return (OP_PRINT, )
-    else:
-        return (OP_PUSH, int(word))
-
-def load_program_from_file(input_file_name):
-    with open(input_file_name, "r") as f:
-        words = f.read().split()
-        return [parse_word(word) for word in words]
-
 
 if __name__ == "__main__":
     (program_name, argv) = uncons(sys.argv)

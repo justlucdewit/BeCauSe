@@ -1,0 +1,8 @@
+// BCS E001
+// Coded by luke_
+// 21-10-2021
+
+// Push 5, then 6
+// Add them together, creating 11
+// Print that
+5 6 + .

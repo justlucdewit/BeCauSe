@@ -1,0 +1,15 @@
+// BCS E006
+// Coded by luke_
+// 21-10-2021
+
+// Push 11 to the stack
+11
+
+// While that number is bigger then 0
+while dup 0 > do
+    // Decrement it by one
+    1 -
+
+    // Print it
+    dup .
+end

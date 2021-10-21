@@ -1,0 +1,6 @@
+output*
+*/__pycache__/*
+__pycache__
+*.bat
+test.bcs
+logo.png

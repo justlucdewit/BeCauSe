@@ -1,0 +1,17 @@
+// BCS E002
+// Coded by luke_
+// 21-10-2021
+
+// If 200 + 220 = 69
+// Then print 69 twice
+200 220 + 69 = if
+	69 .
+	69 .
+end
+
+// If 200 + 220 = 420
+// Then print 420 twice
+200 220 + 420 = if
+	420 .
+	420 .
+end

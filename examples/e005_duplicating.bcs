@@ -1,0 +1,12 @@
+// BCS E005
+// Coded by luke_
+// 21-10-2021
+
+// Push 69 to the stack
+69
+
+// Duplicate it 3x
+dup dup dup
+
+// Print it 4x (everything on the stack)
+. . . .
