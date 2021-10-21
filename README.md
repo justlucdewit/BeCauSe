@@ -19,17 +19,17 @@ To install BeCauSe, make sure to have ./bcs.py in your path
 ## Quick start
 Interpreting
 ```console
-$ ./bcs.py run examples/adding.sbsc
+$ python3 ./bcs.py run examples/e006_while_loops.bcs
 ```
 
 Compiling
 ```console
-$ ./bcs.py com examples/adding.sbsc
+$ python3 ./bcs.py com examples/e006_while_loops.bcs
 $ ./output
 ```
 
 Keeping the generated assembly
 ```console
-$ ./bcs.py com examples/adding.sbsc debug
+$ python3 ./bcs.py com examples/e006_while_loops.bcs debug
 $ cat ./output.asm
 ```
