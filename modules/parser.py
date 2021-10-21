@@ -90,10 +90,13 @@ def crossreference_blocks(program):
             
     return program
 
+def preprocess_file(file_content):
+    return list(map(lambda x: x.split('//')[0], file_content))
+
 def lex_file(file_path):
     with open(file_path, "r") as f:
         return [(file_path, row, col, token)
-            for (row, line) in enumerate(f.readlines())
+            for (row, line) in enumerate(preprocess_file(f.readlines()))
             for (col, token) in lex_line(line)]
 
 def load_program_from_file(file_path):
