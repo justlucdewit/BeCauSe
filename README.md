@@ -1,5 +1,7 @@
+![test](logo-gray.svg)
+
 # BeCauSe
-## The Basic like, Compiled, Stackbased language
+## The Basic like, Compiled, Stack based language
 
 B basic like<br />
 C Compiled<br />
