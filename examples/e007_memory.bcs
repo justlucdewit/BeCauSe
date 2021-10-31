@@ -1,0 +1,9 @@
+// BCS E007
+// Coded by luke_
+// 26-10-2021
+
+// Write the number 69 into memory address 5
+mem 5 + 69 .
+
+// Read from memory address 5 and dump that
+mem 5 + , dump

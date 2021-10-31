@@ -32,6 +32,20 @@ def parse_token_as_op(token):
         return (OP_STORE, )
     elif word == ',':
         return (OP_LOAD, )
+    elif word == 'syscall0':
+        return (OP_SYSCALL0, )
+    elif word == 'syscall1':
+        return (OP_SYSCALL1, )
+    elif word == 'syscall2':
+        return (OP_SYSCALL2, )
+    elif word == 'syscall3':
+        return (OP_SYSCALL3, )
+    elif word == 'syscall4':
+        return (OP_SYSCALL4, )
+    elif word == 'syscall5':
+        return (OP_SYSCALL5, )
+    elif word == 'syscall6':
+        return (OP_SYSCALL6, )
     else:
         try:
             return (OP_PUSH, int(word))

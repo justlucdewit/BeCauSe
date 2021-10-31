@@ -34,6 +34,13 @@ OP_DO = iota("DO")
 
 # IO
 OP_PRINT = iota("PRINT")
+OP_SYSCALL0 = iota("SYSCALL0")
+OP_SYSCALL1 = iota("SYSCALL1")
+OP_SYSCALL2 = iota("SYSCALL2")
+OP_SYSCALL3 = iota("SYSCALL3")
+OP_SYSCALL4 = iota("SYSCALL4")
+OP_SYSCALL5 = iota("SYSCALL5")
+OP_SYSCALL6 = iota("SYSCALL6")
 
 OP_MEM = iota("MEM")
 OP_STORE = iota("STORE")

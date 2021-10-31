@@ -135,6 +135,55 @@ def compile_program(program, out_file_path):
                 output.write(f"    pop rbx\n")
                 output.write(f"    mov [rbx], al\n")
 
+            elif opcode[0] == OP_SYSCALL0:
+                output.write(f"    pop rax\n")
+                output.write(f"    syscall\n\n")
+
+            elif opcode[0] == OP_SYSCALL1:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rdi\n")
+                output.write(f"    syscall\n\n")
+
+            elif opcode[0] == OP_SYSCALL2:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rdi\n")
+                output.write(f"    pop rsi\n")
+                output.write(f"    syscall\n\n")
+
+            elif opcode[0] == OP_SYSCALL3:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rdi\n")
+                output.write(f"    pop rsi\n")
+                output.write(f"    pop rdx\n")
+                output.write(f"    syscall\n\n")
+
+            elif opcode[0] == OP_SYSCALL4:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rdi\n")
+                output.write(f"    pop rsi\n")
+                output.write(f"    pop rdx\n")
+                output.write(f"    pop r10\n")
+                output.write(f"    syscall\n\n")
+
+            elif opcode[0] == OP_SYSCALL5:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rdi\n")
+                output.write(f"    pop rsi\n")
+                output.write(f"    pop rdx\n")
+                output.write(f"    pop r10\n")
+                output.write(f"    pop r8\n")
+                output.write(f"    syscall\n\n")
+
+            elif opcode[0] == OP_SYSCALL6:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rdi\n")
+                output.write(f"    pop rsi\n")
+                output.write(f"    pop rdx\n")
+                output.write(f"    pop r10\n")
+                output.write(f"    pop r8\n")
+                output.write(f"    pop r9\n")
+                output.write(f"    syscall\n\n")
+
             else:
                 print("Error: Unknown opcode encountered in compile_program()")
                 exit(-1)
