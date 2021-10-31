@@ -58,6 +58,17 @@ def compile_program(program, out_file_path):
                 output.write(f"    push rax\n")
                 output.write(f"    push rax\n\n")
 
+            elif opcode[0] == OP_2DUP:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    push rbx\n")
+                output.write(f"    push rax\n")
+                output.write(f"    push rbx\n")
+                output.write(f"    push rax\n\n")
+
+            elif opcode[0] == OP_DROP:
+                output.write(f"    pop rax\n\n")
+
             elif opcode[0] == OP_ADD:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
@@ -133,7 +144,7 @@ def compile_program(program, out_file_path):
             elif opcode[0] == OP_STORE:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
-                output.write(f"    mov [rbx], al\n")
+                output.write(f"    mov [rbx], al\n\n")
 
             elif opcode[0] == OP_SYSCALL0:
                 output.write(f"    pop rax\n")

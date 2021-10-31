@@ -26,6 +26,9 @@ def run_program(program):
             stack.append(a)
             stack.append(b)
 
+        elif operation[0] == OP_DROP:
+            stack.pop()
+
         elif operation[0] == OP_ADD:
             stack.append(stack.pop() + stack.pop())
 

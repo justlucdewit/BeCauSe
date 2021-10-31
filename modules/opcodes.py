@@ -18,6 +18,7 @@ def iota(name, reset=False):
 OP_PUSH = iota("PUSH", True)
 OP_DUP = iota("DUP")
 OP_2DUP = iota("2DUP")
+OP_DROP = iota("DROP")
 
 # Math
 OP_ADD = iota("ADD")

@@ -24,6 +24,8 @@ def parse_token_as_op(token):
         return (OP_DUP, )
     elif word == '2dup':
         return (OP_2DUP, )
+    elif word == 'drop':
+        return (OP_DROP, )
     elif word == 'while':
         return (OP_WHILE, )
     elif word == 'do':
