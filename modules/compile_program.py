@@ -185,7 +185,7 @@ def compile_program(program, out_file_path):
                 output.write(f"    syscall\n\n")
 
             else:
-                print("Error: Unknown opcode encountered in compile_program()")
+                print("Compile Error: Unknown opcode encountered in compile_program()")
                 exit(-1)
 
         output.write(f"addr_{len(program)}: ; Exit program with code 0\n")

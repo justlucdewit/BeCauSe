@@ -1,14 +1,14 @@
 from modules.opcodes import *
 
 debug = False
+stack = []
+memory = bytearray(MEMORY_CAPACITY)
 
 def debug_print(*msg):
     if debug:
         print(*msg)
 
 def run_program(program):
-    stack = []
-    memory = bytearray(MEMORY_CAPACITY)
     ip = 0
     debug_print(program)
     while ip < len(program):
@@ -92,8 +92,60 @@ def run_program(program):
             ptr = stack.pop()
             memory[ptr] = byte
 
+        elif operation[0] == OP_SYSCALL0:
+            syscall_num = stack.pop()
+            emulate_unix(syscall_num, [])
+
+        elif operation[0] == OP_SYSCALL1:
+            syscall_num = stack.pop()
+            emulate_unix(syscall_num, [stack.pop()])
+    
+        elif operation[0] == OP_SYSCALL2:
+            syscall_num = stack.pop()
+            emulate_unix(syscall_num, [stack.pop(), stack.pop()])
+
+        elif operation[0] == OP_SYSCALL3:
+            syscall_num = stack.pop()
+            emulate_unix(syscall_num, [stack.pop(), stack.pop(), stack.pop()])
+
+        elif operation[0] == OP_SYSCALL4:
+            syscall_num = stack.pop()
+            emulate_unix(syscall_num, [stack.pop(), stack.pop(), stack.pop(), stack.pop()])
+
+        elif operation[0] == OP_SYSCALL5:
+            syscall_num = stack.pop()
+            emulate_unix(syscall_num, [stack.pop(), stack.pop(), stack.pop(), stack.pop(), stack.pop()])
+
+        elif operation[0] == OP_SYSCALL6:
+            syscall_num = stack.pop()
+            emulate_unix(syscall_num, [stack.pop(), stack.pop(), stack.pop(), stack.pop(), stack.pop(), stack.pop()])
+
         else:
-            print("Error: Unknown opcode encountered in run_program")
+            print("Simulation Error: Unknown opcode encountered in run_program")
             exit(-1)
 
         ip += 1
+
+def emulate_unix(syscall, values):
+    # sys write
+    if syscall == 1:
+        if (len(values) < 3):
+            unix_emulation_error(3, len(values))
+
+        # write to std out
+        if (values[0] == 1):
+            for byte in memory[values[1]:values[1]+values[2]]:
+                print(chr(byte), end="")
+        
+
+    # sys exit
+    elif syscall == 60:
+        if (len(values) < 1):
+            unix_emulation_error(1, len(values))
+        exit(values[0])
+
+    
+
+def unix_emulation_error(expected_count, received_count):
+    print(f"Simulation Error: expected at least {expected_count} values for syscall, got {received_count} values")
+    exit(-1)

@@ -15,7 +15,7 @@ if __name__ == "__main__":
 
     if len(argv) < 1:
         usage(program_name)
-        print("ERROR: no subcommand provided\n")
+        print("CLI Error: no subcommand provided\n")
         exit(-1)
 
     (subcommand, options) = uncons(argv)
@@ -28,7 +28,7 @@ if __name__ == "__main__":
     elif (subcommand == "run"):
         if len(options) < 1:
             usage(program_name)
-            print("ERROR: no filename given\n")
+            print("CLI Error: no filename given\n")
             exit(-1)
 
         (input_file_name, options) = uncons(options)
@@ -37,7 +37,7 @@ if __name__ == "__main__":
     elif (subcommand == "com"):
         if len(options) < 1:
             usage(program_name)
-            print("ERROR: no filename given\n")
+            print("CLI Error: no filename given\n")
             exit(-1)
 
         (input_file_name, options) = uncons(options)
@@ -50,4 +50,4 @@ if __name__ == "__main__":
         if not debug:
             subprocess.call(["rm", "output.asm"])
     else:
-        print(f"ERROR: no subcommand like '{subcommand}'")
+        print(f"CLI Error: no subcommand like '{subcommand}'")

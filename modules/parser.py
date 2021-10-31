@@ -97,7 +97,7 @@ def crossreference_blocks(program):
                 program[block_start_addr] = (OP_DO, ip + 1)
 
             else:
-                print("ERROR: else can only be used to close 'if' and 'else' and 'do' blocks")
+                print("Parse Error: else can only be used to close 'if' and 'else' and 'do' blocks")
                 exit(-1)
 
         elif op[0] == OP_WHILE:
