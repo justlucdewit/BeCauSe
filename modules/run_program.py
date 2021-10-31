@@ -6,7 +6,6 @@ memory = bytearray(MEMORY_CAPACITY)
 
 def run_program(program):
     ip = 0
-    debug_print(program)
     while ip < len(program):
         operation = program[ip]
 
@@ -61,10 +60,10 @@ def run_program(program):
                 ip = operation[1] - 1
 
         elif operation[0] == OP_ELSE:
-            ip = operation[1]
+            ip = operation[1] - 1
 
         elif operation[0] == OP_END:
-            ip = operation[1]
+            ip = operation[1] - 1
 
         elif operation[0] == OP_WHILE:
             pass
@@ -73,7 +72,7 @@ def run_program(program):
             a = stack.pop()
 
             if a == 0:
-                ip = operation[1]
+                ip = operation[1] - 1
 
         elif operation[0] == OP_MEM:
             stack.append(0)
@@ -86,7 +85,7 @@ def run_program(program):
         elif operation[0] == OP_STORE:
             byte = stack.pop()
             ptr = stack.pop()
-            memory[ptr] = byte
+            memory[ptr] = byte & 0xFF
 
         elif operation[0] == OP_SYSCALL0:
             syscall_num = stack.pop()

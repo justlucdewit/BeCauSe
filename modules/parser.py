@@ -87,21 +87,26 @@ def crossreference_blocks(program):
             stack.append(ip)
 
         elif op[0] == OP_ELSE:
-            if_addr = stack.pop()
-            program[if_addr] = (OP_IF, ip + 1)
+            if_ip = stack.pop()
+
+            if program[if_ip][0] != OP_IF:
+                print("Parse Error: else can only be used with 'if' blocks")
+                exit(-1)
+
+            program[if_ip] = (OP_IF, ip + 1)
             stack.append(ip)
 
         elif op[0] == OP_END:
-            block_start_addr = stack.pop()
-            if program[block_start_addr][0] == OP_IF or program[block_start_addr][0] == OP_ELSE:
-                program[block_start_addr] = (program[block_start_addr][0], ip)
-                program[block_start_addr] = (OP_END, ip + 1)
-            elif program[block_start_addr][0] == OP_DO:
-                program[ip] = (OP_END, program[block_start_addr][1])
-                program[block_start_addr] = (OP_DO, ip + 1)
+            block_ip = stack.pop()
+            if program[block_ip][0] == OP_IF or program[block_ip][0] == OP_ELSE:
+                program[block_ip] = (program[block_ip][0], ip)
+                program[ip] = (OP_END, ip + 1)
+            elif program[block_ip][0] == OP_DO:
+                program[ip] = (OP_END, program[block_ip][1])
+                program[block_ip] = (OP_DO, ip + 1)
 
             else:
-                print("Parse Error: else can only be used to close 'if' and 'else' and 'do' blocks")
+                print("Parse Error: end can only be used to close 'if' and 'else' and 'do' blocks")
                 exit(-1)
 
         elif op[0] == OP_WHILE:
