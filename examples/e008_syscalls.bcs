@@ -1,0 +1,21 @@
+// BCS E008
+// Coded by luke_
+// 31-10-2021
+
+// Put "Hello world!" into memory at memory address 0
+mem 0 + 72 .
+mem 1 + 101 .
+mem 2 + 108 .
+mem 3 + 108 .
+mem 4 + 111 .
+mem 5 + 32 .
+mem 6 + 119 .
+mem 7 + 111 .
+mem 8 + 114 .
+mem 9 + 108 .
+mem 10 + 100 .
+mem 11 + 33 .
+mem 12 + 10 .
+
+// Print a string of length 3 that starts at memory address 0 using syscall
+13 mem 1 1 syscall3
