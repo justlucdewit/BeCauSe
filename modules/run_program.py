@@ -8,6 +8,7 @@ def debug_print(*msg):
 
 def run_program(program):
     stack = []
+    memory = bytearray(MEMORY_CAPACITY)
     ip = 0
     debug_print(program)
     while ip < len(program):
@@ -78,6 +79,18 @@ def run_program(program):
             if a == 0:
                 ip = operation[1]
 
+        elif operation[0] == OP_MEM:
+            stack.append(0)
+
+        elif operation[0] == OP_LOAD:
+            ptr = stack.pop()
+            byte = memory[ptr] % 0xFF
+            stack.append(byte)
+
+        elif operation[0] == OP_STORE:
+            byte = stack.pop()
+            ptr = stack.pop()
+            memory[ptr] = byte
 
         else:
             print("Error: Unknown opcode encountered in run_program")

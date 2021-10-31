@@ -1,21 +1,5 @@
 from modules.opcodes import *
 
-instructions_map = {
-    0: ['PUSH', True],
-    1: ['DUP', False],
-    2: ['ADD', False],
-    3: ['SUBTRACT', False],
-    4: ['GREATER', False],
-    5: ['SMALLER', False],
-    6: ['EQUAL', False],
-    7: ['IF', False],
-    8: ['END', False],
-    9: ['ELSE', False],
-    10: ['WHILE', False],
-    11: ['DO', False],
-    12: ['PRINT', False],
-}
-
 def compile_program(program, out_file_path):
     with open(out_file_path, "w+") as output:
         # text segment
@@ -63,9 +47,8 @@ def compile_program(program, out_file_path):
 
         for ip in range(len(program)):
             opcode = program[ip]
-            instruction_details = instructions_map[opcode[0]]
 
-            output.write(f"addr_{ip}: ; ({instruction_details[0]}{' ' + str(opcode[1]) if instruction_details[1] else ''})\n")
+            output.write(f"addr_{ip}: ; ({instructions_map[opcode[0]]}{' ' + str(opcode[1]) if len(opcode) > 1 else ''})\n")
             
             if opcode[0] == OP_PUSH:
                 output.write(f"    push {opcode[1]}\n\n")
@@ -137,13 +120,31 @@ def compile_program(program, out_file_path):
                 output.write(f"    pop rax\n")
                 output.write(f"    test rax, rax\n")
                 output.write(f"    jz addr_{opcode[1]}\n\n")
+            
+            elif opcode[0] == OP_MEM:
+                output.write(f"    push mem\n\n")
+            
+            elif opcode[0] == OP_LOAD:
+                output.write(f"    pop rax\n")
+                output.write(f"    xor rbx, rbx\n")
+                output.write(f"    mov bl, [rax]\n")
+                output.write(f"    push rbx\n\n")
+
+            elif opcode[0] == OP_STORE:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    mov [rbx], al\n")
 
             else:
                 print("Error: Unknown opcode encountered in compile_program()")
                 exit(-1)
 
-        output.write("addr_PROGRAM_EXIT: ; Exit program with code 0\n")
+        output.write(f"addr_{len(program)}: ; Exit program with code 0\n")
         output.write("    mov rax, 60\n")
         output.write("    mov rdi, 0\n")
         output.write("    syscall\n")
         output.write("    ret")
+
+        # Create memory segment
+        output.write("\n\nsegment .bss\n")
+        output.write(f"mem: resb {MEMORY_CAPACITY}")

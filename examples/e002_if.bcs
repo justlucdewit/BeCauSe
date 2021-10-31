@@ -5,13 +5,13 @@
 // If 200 + 220 = 69
 // Then print 69 twice
 200 220 + 69 = if
-	69 .
-	69 .
+	69 dump
+	69 dump
 end
 
 // If 200 + 220 = 420
 // Then print 420 twice
 200 220 + 420 = if
-	420 .
-	420 .
+	420 dump
+	420 dump
 end

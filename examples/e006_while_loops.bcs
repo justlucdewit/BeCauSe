@@ -11,5 +11,5 @@ while dup 0 > do
     1 -
 
     // Print it
-    dup .
+    dup dump
 end

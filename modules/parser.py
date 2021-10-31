@@ -10,7 +10,7 @@ def parse_token_as_op(token):
         return (OP_ADD, )
     elif word == '-':
         return (OP_SUBTRACT, )
-    elif word == '.':
+    elif word == 'dump':
         return (OP_PRINT, )
     elif word == '=':
         return (OP_EQUAL, )
@@ -26,6 +26,12 @@ def parse_token_as_op(token):
         return (OP_WHILE, )
     elif word == 'do':
         return (OP_DO, )
+    elif word == 'mem':
+        return (OP_MEM, )
+    elif word == '.':
+        return (OP_STORE, )
+    elif word == ',':
+        return (OP_LOAD, )
     else:
         try:
             return (OP_PUSH, int(word))

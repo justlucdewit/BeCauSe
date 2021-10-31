@@ -9,4 +9,4 @@
 dup dup dup
 
 // Print it 4x (everything on the stack)
-. . . .
+dump dump dump dump
