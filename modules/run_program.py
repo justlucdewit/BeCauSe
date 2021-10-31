@@ -36,6 +36,27 @@ def run_program(program):
             b = stack.pop()
             stack.append(b - a)
 
+        elif operation[0] == OP_SHIFT_LEFT:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(int(b << a))
+
+        elif operation[0] == OP_SHIFT_RIGHT:
+            a = stack.pop()
+            b = stack.pop()
+            print(f"{b} >> {a} = {b >> a}")
+            stack.append(int(b >> a))
+
+        elif operation[0] == OP_BITWISE_AND:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(int(b & a))
+
+        elif operation[0] == OP_BITWISE_OR:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(int(b | a))
+
         elif operation[0] == OP_PRINT:
             print(stack.pop())
         

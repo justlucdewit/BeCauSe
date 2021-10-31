@@ -10,6 +10,14 @@ def parse_token_as_op(token):
         return (OP_ADD, )
     elif word == '-':
         return (OP_SUBTRACT, )
+    elif word == '>>':
+        return (OP_SHIFT_RIGHT, )
+    elif word == '<<':
+        return (OP_SHIFT_LEFT, )
+    elif word == '|':
+        return (OP_BITWISE_OR, )
+    elif word == '&':
+        return (OP_BITWISE_AND, )
     elif word == 'dump':
         return (OP_PRINT, )
     elif word == '=':

@@ -1,0 +1,15 @@
+// BCS E009
+// Coded by luke_
+// 31-10-2021
+
+// Left shifting
+1 3 << dump
+
+// Right shifting
+32 3 >> dump
+
+// Bitwise or
+1 2 | dump
+
+// Bitwise and
+1 2 & dump
