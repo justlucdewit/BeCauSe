@@ -3,6 +3,8 @@ instructions_map = {}
 MEMORY_CAPACITY = 640_000
 
 iota_counter = 0
+
+
 def iota(name, reset=False):
     global iota_counter
     if reset:
@@ -14,11 +16,14 @@ def iota(name, reset=False):
 
     return result
 
+
 # Stack
 OP_PUSH = iota("PUSH", True)
 OP_DUP = iota("DUP")
 OP_2DUP = iota("2DUP")
 OP_DROP = iota("DROP")
+OP_SWAP = iota("SWAP")
+OP_OVER = iota("OVER")
 
 # Math
 OP_ADD = iota("ADD")

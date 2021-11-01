@@ -4,6 +4,7 @@ debug = False
 stack = []
 memory = bytearray(MEMORY_CAPACITY)
 
+
 def run_program(program):
     ip = 0
     while ip < len(program):
@@ -16,7 +17,7 @@ def run_program(program):
             a = stack.pop()
             stack.append(a)
             stack.append(a)
-        
+
         elif operation[0] == OP_2DUP:
             b = stack.pop()
             a = stack.pop()
@@ -27,6 +28,19 @@ def run_program(program):
 
         elif operation[0] == OP_DROP:
             stack.pop()
+
+        elif operation[0] == OP_SWAP:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(a)
+            stack.append(b)
+
+        elif operation[0] == OP_OVER:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(b)
+            stack.append(a)
+            stack.append(b)
 
         elif operation[0] == OP_ADD:
             stack.append(stack.pop() + stack.pop())
@@ -44,7 +58,6 @@ def run_program(program):
         elif operation[0] == OP_SHIFT_RIGHT:
             a = stack.pop()
             b = stack.pop()
-            print(f"{b} >> {a} = {b >> a}")
             stack.append(int(b >> a))
 
         elif operation[0] == OP_BITWISE_AND:
@@ -59,7 +72,7 @@ def run_program(program):
 
         elif operation[0] == OP_PRINT:
             print(stack.pop())
-        
+
         elif operation[0] == OP_GREATER:
             b = stack.pop()
             a = stack.pop()
@@ -115,7 +128,7 @@ def run_program(program):
         elif operation[0] == OP_SYSCALL1:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [stack.pop()])
-    
+
         elif operation[0] == OP_SYSCALL2:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [stack.pop(), stack.pop()])
@@ -126,21 +139,25 @@ def run_program(program):
 
         elif operation[0] == OP_SYSCALL4:
             syscall_num = stack.pop()
-            emulate_unix(syscall_num, [stack.pop(), stack.pop(), stack.pop(), stack.pop()])
+            emulate_unix(syscall_num, [stack.pop(),
+                                       stack.pop(), stack.pop(), stack.pop()])
 
         elif operation[0] == OP_SYSCALL5:
             syscall_num = stack.pop()
-            emulate_unix(syscall_num, [stack.pop(), stack.pop(), stack.pop(), stack.pop(), stack.pop()])
+            emulate_unix(syscall_num, [stack.pop(), stack.pop(
+            ), stack.pop(), stack.pop(), stack.pop()])
 
         elif operation[0] == OP_SYSCALL6:
             syscall_num = stack.pop()
-            emulate_unix(syscall_num, [stack.pop(), stack.pop(), stack.pop(), stack.pop(), stack.pop(), stack.pop()])
+            emulate_unix(syscall_num, [stack.pop(), stack.pop(
+            ), stack.pop(), stack.pop(), stack.pop(), stack.pop()])
 
         else:
             print("Simulation Error: Unknown opcode encountered in run_program")
             exit(-1)
 
         ip += 1
+
 
 def emulate_unix(syscall, values):
     # sys write
@@ -152,7 +169,6 @@ def emulate_unix(syscall, values):
         if (values[0] == 1):
             for byte in memory[values[1]:values[1]+values[2]]:
                 print(chr(byte), end="")
-        
 
     # sys exit
     elif syscall == 60:
@@ -160,8 +176,8 @@ def emulate_unix(syscall, values):
             unix_emulation_error(1, len(values))
         exit(values[0])
 
-    
 
 def unix_emulation_error(expected_count, received_count):
-    print(f"Simulation Error: expected at least {expected_count} values for syscall, got {received_count} values")
+    print(
+        f"Simulation Error: expected at least {expected_count} values for syscall, got {received_count} values")
     exit(-1)

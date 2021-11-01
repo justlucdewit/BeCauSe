@@ -71,6 +71,19 @@ def compile_program(program, out_file_path):
             elif opcode[0] == OP_DROP:
                 output.write(f"    pop rax\n\n")
 
+            elif opcode[0] == OP_SWAP:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    push rax\n")
+                output.write(f"    push rbx\n\n")
+
+            elif opcode[0] == OP_OVER:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    push rbx\n")
+                output.write(f"    push rax\n")
+                output.write(f"    push rbx\n")
+
             elif opcode[0] == OP_ADD:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
