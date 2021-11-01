@@ -50,17 +50,17 @@ def compile_program(program, out_file_path):
             opcode = program[ip]
 
             output.write(
-                f"addr_{ip}: ; ({instructions_map[opcode[0]]}{' ' + str(opcode[1]) if len(opcode) > 1 else ''})\n")
+                f"addr_{ip}: ; ({instructions_map[opcode['type']]}{' ' + str(opcode['value']) if 'value' in opcode else ''})\n")
 
-            if opcode[0] == OP_PUSH:
-                output.write(f"    push {opcode[1]}\n\n")
+            if opcode['type'] == OP_PUSH:
+                output.write(f"    push {opcode['value']}\n\n")
 
-            elif opcode[0] == OP_DUP:
+            elif opcode['type'] == OP_DUP:
                 output.write(f"    pop rax\n")
                 output.write(f"    push rax\n")
                 output.write(f"    push rax\n\n")
 
-            elif opcode[0] == OP_2DUP:
+            elif opcode['type'] == OP_2DUP:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    push rbx\n")
@@ -68,63 +68,63 @@ def compile_program(program, out_file_path):
                 output.write(f"    push rbx\n")
                 output.write(f"    push rax\n\n")
 
-            elif opcode[0] == OP_DROP:
+            elif opcode['type'] == OP_DROP:
                 output.write(f"    pop rax\n\n")
 
-            elif opcode[0] == OP_SWAP:
+            elif opcode['type'] == OP_SWAP:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    push rax\n")
                 output.write(f"    push rbx\n\n")
 
-            elif opcode[0] == OP_OVER:
+            elif opcode['type'] == OP_OVER:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    push rbx\n")
                 output.write(f"    push rax\n")
                 output.write(f"    push rbx\n")
 
-            elif opcode[0] == OP_ADD:
+            elif opcode['type'] == OP_ADD:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    add rax, rbx\n")
                 output.write(f"    push rax\n\n")
 
-            elif opcode[0] == OP_SUBTRACT:
+            elif opcode['type'] == OP_SUBTRACT:
                 output.write(f"    pop rbx\n")
                 output.write(f"    pop rax\n")
                 output.write(f"    sub rax, rbx\n")
                 output.write(f"    push rax\n\n")
 
-            elif opcode[0] == OP_SHIFT_LEFT:
+            elif opcode['type'] == OP_SHIFT_LEFT:
                 output.write(f"    pop rcx\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    shl rbx, cl\n")
                 output.write(f"    push rbx\n\n")
 
-            elif opcode[0] == OP_SHIFT_RIGHT:
+            elif opcode['type'] == OP_SHIFT_RIGHT:
                 output.write(f"    pop rcx\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    shr rbx, cl\n")
                 output.write(f"    push rbx\n\n")
 
-            elif opcode[0] == OP_BITWISE_AND:
+            elif opcode['type'] == OP_BITWISE_AND:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    and rbx, rax\n")
                 output.write(f"    push rbx\n\n")
 
-            elif opcode[0] == OP_BITWISE_OR:
+            elif opcode['type'] == OP_BITWISE_OR:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    or rbx, rax\n")
                 output.write(f"    push rbx\n\n")
 
-            elif opcode[0] == OP_PRINT:
+            elif opcode['type'] == OP_PRINT:
                 output.write(f"    pop rdi\n")
                 output.write(f"    call dump\n\n")
 
-            elif opcode[0] == OP_GREATER:
+            elif opcode['type'] == OP_GREATER:
                 output.write(f"    mov rcx, 0\n")
                 output.write(f"    mov rdx, 1\n")
                 output.write(f"    pop rbx\n")
@@ -133,7 +133,7 @@ def compile_program(program, out_file_path):
                 output.write(f"    cmovg rcx, rdx\n")
                 output.write(f"    push rcx\n\n")
 
-            elif opcode[0] == OP_SMALLER:
+            elif opcode['type'] == OP_SMALLER:
                 output.write(f"    mov rcx, 0\n")
                 output.write(f"    mov rdx, 1\n")
                 output.write(f"    pop rbx\n")
@@ -142,7 +142,7 @@ def compile_program(program, out_file_path):
                 output.write(f"    cmovl rcx, rdx\n")
                 output.write(f"    push rcx\n\n")
 
-            elif opcode[0] == OP_EQUAL:
+            elif opcode['type'] == OP_EQUAL:
                 output.write(f"    mov rcx, 0\n")
                 output.write(f"    mov rdx, 1\n")
                 output.write(f"    pop rax\n")
@@ -151,63 +151,63 @@ def compile_program(program, out_file_path):
                 output.write(f"    cmove rcx, rdx\n")
                 output.write(f"    push rcx\n\n")
 
-            elif opcode[0] == OP_IF:
+            elif opcode['type'] == OP_IF:
                 output.write(f"    pop rax\n")
                 output.write(f"    test rax, rax\n")
-                output.write(f"    jz addr_{opcode[1]}\n\n")
+                output.write(f"    jz addr_{opcode['reference']}\n\n")
 
-            elif opcode[0] == OP_ELSE:
-                output.write(f"    jmp addr_{opcode[1]}\n\n")
+            elif opcode['type'] == OP_ELSE:
+                output.write(f"    jmp addr_{opcode['reference']}\n\n")
 
-            elif opcode[0] == OP_END:
-                if ip + 1 != opcode[1]:
-                    output.write(f"    jmp addr_{opcode[1]}\n\n")
+            elif opcode['type'] == OP_END:
+                if ip + 1 != opcode['reference']:
+                    output.write(f"    jmp addr_{opcode['reference']}\n\n")
 
-            elif opcode[0] == OP_WHILE:
+            elif opcode['type'] == OP_WHILE:
                 output.write(f"\n")
 
-            elif opcode[0] == OP_DO:
+            elif opcode['type'] == OP_DO:
                 output.write(f"    pop rax\n")
                 output.write(f"    test rax, rax\n")
-                output.write(f"    jz addr_{opcode[1]}\n\n")
+                output.write(f"    jz addr_{opcode['reference']}\n\n")
 
-            elif opcode[0] == OP_MEM:
+            elif opcode['type'] == OP_MEM:
                 output.write(f"    push mem\n\n")
 
-            elif opcode[0] == OP_LOAD:
+            elif opcode['type'] == OP_LOAD:
                 output.write(f"    pop rax\n")
                 output.write(f"    xor rbx, rbx\n")
                 output.write(f"    mov bl, [rax]\n")
                 output.write(f"    push rbx\n\n")
 
-            elif opcode[0] == OP_STORE:
+            elif opcode['type'] == OP_STORE:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rbx\n")
                 output.write(f"    mov [rbx], al\n\n")
 
-            elif opcode[0] == OP_SYSCALL0:
+            elif opcode['type'] == OP_SYSCALL0:
                 output.write(f"    pop rax\n")
                 output.write(f"    syscall\n\n")
 
-            elif opcode[0] == OP_SYSCALL1:
+            elif opcode['type'] == OP_SYSCALL1:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rdi\n")
                 output.write(f"    syscall\n\n")
 
-            elif opcode[0] == OP_SYSCALL2:
+            elif opcode['type'] == OP_SYSCALL2:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rdi\n")
                 output.write(f"    pop rsi\n")
                 output.write(f"    syscall\n\n")
 
-            elif opcode[0] == OP_SYSCALL3:
+            elif opcode['type'] == OP_SYSCALL3:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rdi\n")
                 output.write(f"    pop rsi\n")
                 output.write(f"    pop rdx\n")
                 output.write(f"    syscall\n\n")
 
-            elif opcode[0] == OP_SYSCALL4:
+            elif opcode['type'] == OP_SYSCALL4:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rdi\n")
                 output.write(f"    pop rsi\n")
@@ -215,7 +215,7 @@ def compile_program(program, out_file_path):
                 output.write(f"    pop r10\n")
                 output.write(f"    syscall\n\n")
 
-            elif opcode[0] == OP_SYSCALL5:
+            elif opcode['type'] == OP_SYSCALL5:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rdi\n")
                 output.write(f"    pop rsi\n")
@@ -224,7 +224,7 @@ def compile_program(program, out_file_path):
                 output.write(f"    pop r8\n")
                 output.write(f"    syscall\n\n")
 
-            elif opcode[0] == OP_SYSCALL6:
+            elif opcode['type'] == OP_SYSCALL6:
                 output.write(f"    pop rax\n")
                 output.write(f"    pop rdi\n")
                 output.write(f"    pop rsi\n")

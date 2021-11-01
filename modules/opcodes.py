@@ -5,7 +5,7 @@ MEMORY_CAPACITY = 640_000
 iota_counter = 0
 
 
-def iota(name, reset=False):
+def register_operation(name, reset=False):
     global iota_counter
     if reset:
         iota_counter = 0
@@ -18,44 +18,48 @@ def iota(name, reset=False):
 
 
 # Stack
-OP_PUSH = iota("PUSH", True)
-OP_DUP = iota("DUP")
-OP_2DUP = iota("2DUP")
-OP_DROP = iota("DROP")
-OP_SWAP = iota("SWAP")
-OP_OVER = iota("OVER")
+OP_PUSH = register_operation("PUSH", True)
+OP_DUP = register_operation("DUP")
+OP_2DUP = register_operation("2DUP")
+OP_DROP = register_operation("DROP")
+OP_SWAP = register_operation("SWAP")
+OP_OVER = register_operation("OVER")
 
 # Math
-OP_ADD = iota("ADD")
-OP_SUBTRACT = iota("SUBTRACT")
-OP_GREATER = iota("GREATER")
-OP_SMALLER = iota("SMALLER")
-OP_EQUAL = iota("EQUAL")
-OP_SHIFT_LEFT = iota("BITWISE LEFTSHIFT")
-OP_SHIFT_RIGHT = iota("BITWISE RIGHTSHIFT")
-OP_BITWISE_AND = iota("BITWISE AND")
-OP_BITWISE_OR = iota("BITWISE OR")
+OP_ADD = register_operation("ADD")
+OP_SUBTRACT = register_operation("SUBTRACT")
+OP_GREATER = register_operation("GREATER")
+OP_SMALLER = register_operation("SMALLER")
+OP_EQUAL = register_operation("EQUAL")
+OP_SHIFT_LEFT = register_operation("BITWISE LEFTSHIFT")
+OP_SHIFT_RIGHT = register_operation("BITWISE RIGHTSHIFT")
+OP_BITWISE_AND = register_operation("BITWISE AND")
+OP_BITWISE_OR = register_operation("BITWISE OR")
 
 # Flow control
-OP_IF = iota("IF")
-OP_END = iota("END")
-OP_ELSE = iota("ELSE")
-OP_WHILE = iota("WHILE")
-OP_DO = iota("DO")
+OP_IF = register_operation("IF")
+OP_END = register_operation("END")
+OP_ELSE = register_operation("ELSE")
+OP_WHILE = register_operation("WHILE")
+OP_DO = register_operation("DO")
 
 # IO
-OP_PRINT = iota("PRINT")
-OP_SYSCALL0 = iota("SYSCALL0")
-OP_SYSCALL1 = iota("SYSCALL1")
-OP_SYSCALL2 = iota("SYSCALL2")
-OP_SYSCALL3 = iota("SYSCALL3")
-OP_SYSCALL4 = iota("SYSCALL4")
-OP_SYSCALL5 = iota("SYSCALL5")
-OP_SYSCALL6 = iota("SYSCALL6")
+OP_PRINT = register_operation("PRINT")
+OP_SYSCALL0 = register_operation("SYSCALL0")
+OP_SYSCALL1 = register_operation("SYSCALL1")
+OP_SYSCALL2 = register_operation("SYSCALL2")
+OP_SYSCALL3 = register_operation("SYSCALL3")
+OP_SYSCALL4 = register_operation("SYSCALL4")
+OP_SYSCALL5 = register_operation("SYSCALL5")
+OP_SYSCALL6 = register_operation("SYSCALL6")
 
-OP_MEM = iota("MEM")
-OP_STORE = iota("STORE")
-OP_LOAD = iota("LOAD")
+OP_MEM = register_operation("MEM")
+OP_STORE = register_operation("STORE")
+OP_LOAD = register_operation("LOAD")
+
+# Token types
+TOK_INT = register_operation("INT")
+TOK_WORD = register_operation("WORD")
 
 # Non opcodes
-NUMBER_OF_OPS = iota("NUM_OPS")
+NUMBER_OF_OPS = register_operation("NUM_OPS")
