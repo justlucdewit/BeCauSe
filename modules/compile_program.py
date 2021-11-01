@@ -55,6 +55,9 @@ def compile_program(program, out_file_path):
             if opcode['type'] == OP_PUSH:
                 output.write(f"    push {opcode['value']}\n\n")
 
+            elif opcode['type'] == OP_PUSH_STRING:
+                pass
+
             elif opcode['type'] == OP_DUP:
                 output.write(f"    pop rax\n")
                 output.write(f"    push rax\n")

@@ -1,6 +1,7 @@
 instructions_map = {}
 
 MEMORY_CAPACITY = 640_000
+STRING_CAPACITY = 640_000
 
 iota_counter = 0
 
@@ -19,6 +20,7 @@ def register_operation(name, reset=False):
 
 # Stack
 OP_PUSH = register_operation("PUSH", True)
+OP_PUSH_STRING = register_operation("PUSH")
 OP_DUP = register_operation("DUP")
 OP_2DUP = register_operation("2DUP")
 OP_DROP = register_operation("DROP")
@@ -60,6 +62,7 @@ OP_LOAD = register_operation("LOAD")
 # Token types
 TOK_INT = register_operation("INT")
 TOK_WORD = register_operation("WORD")
+TOK_STRING = register_operation("WORD")
 
 # Non opcodes
 NUMBER_OF_OPS = register_operation("NUM_OPS")

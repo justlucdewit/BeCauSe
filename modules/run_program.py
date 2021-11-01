@@ -2,16 +2,30 @@ from modules.opcodes import *
 
 debug = False
 stack = []
-memory = bytearray(MEMORY_CAPACITY)
+memory = bytearray(MEMORY_CAPACITY + STRING_CAPACITY)
 
 
 def run_program(program):
     ip = 0
+    str_size = 0
+
     while ip < len(program):
         operation = program[ip]
 
         if operation['type'] == OP_PUSH:
             stack.append(operation['value'])
+
+        elif operation['type'] == OP_PUSH_STRING:
+            bs = bytes(operation['value'], 'utf-8')
+            n = len(bs)
+            stack.append(n)
+            if 'addr' not in operation:
+                memory[str_size:str_size +
+                       n] = bs
+                operation['addr'] = str_size
+                str_size += n
+
+            stack.append(operation['addr'])
 
         elif operation['type'] == OP_DUP:
             a = stack.pop()
@@ -109,7 +123,7 @@ def run_program(program):
                 ip = operation['reference'] - 1
 
         elif operation['type'] == OP_MEM:
-            stack.append(0)
+            stack.append(STRING_CAPACITY)
 
         elif operation['type'] == OP_LOAD:
             ptr = stack.pop()

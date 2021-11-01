@@ -37,6 +37,8 @@ BUILDIN_WORDS = {
 def parse_token_as_op(token):
     if token['type'] == TOK_INT:
         return {'type': OP_PUSH, 'value': int(token['value']), 'loc': token['loc']}
+    elif token['type'] == TOK_STRING:
+        return {'type': OP_PUSH_STRING, 'value': token['value'], 'loc': token['loc']}
     elif token['type'] == TOK_WORD:
         if token['value'] in BUILDIN_WORDS:
             return {'type': BUILDIN_WORDS[token['value']], 'loc': token['loc']}
@@ -76,9 +78,16 @@ def lex_word(token_as_text):
 def lex_line(line):
     col = find_col(line, 0, lambda x: not x.isspace())
     while col < len(line):
-        col_end = find_col(line, col, lambda x: x.isspace())
-        yield (col, lex_word(line[col:col_end]))
-        col = find_col(line, col_end, lambda x: not x.isspace())
+        col_end = None
+
+        if line[col] == '"':
+            col_end = find_col(line, col + 1, lambda x: x == '"')
+            yield (col, (TOK_STRING, line[col + 1:col_end]))
+            col = find_col(line, col_end + 1, lambda x: not x.isspace())
+        else:
+            col_end = find_col(line, col, lambda x: x.isspace())
+            yield (col, lex_word(line[col:col_end]))
+            col = find_col(line, col_end, lambda x: not x.isspace())
 
 
 def crossreference_blocks(program):
