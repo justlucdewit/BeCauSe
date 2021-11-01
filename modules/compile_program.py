@@ -1,5 +1,6 @@
 from modules.opcodes import *
 
+
 def compile_program(program, out_file_path):
     with open(out_file_path, "w+") as output:
         # text segment
@@ -40,7 +41,7 @@ def compile_program(program, out_file_path):
         output.write("    syscall\n")
         output.write("    add     rsp, 40\n")
         output.write("    ret\n\n")
-        
+
         # start the start
         output.write("global _start\n")
         output.write("_start:\n\n")
@@ -48,8 +49,9 @@ def compile_program(program, out_file_path):
         for ip in range(len(program)):
             opcode = program[ip]
 
-            output.write(f"addr_{ip}: ; ({instructions_map[opcode[0]]}{' ' + str(opcode[1]) if len(opcode) > 1 else ''})\n")
-            
+            output.write(
+                f"addr_{ip}: ; ({instructions_map[opcode[0]]}{' ' + str(opcode[1]) if len(opcode) > 1 else ''})\n")
+
             if opcode[0] == OP_PUSH:
                 output.write(f"    push {opcode[1]}\n\n")
 
@@ -74,12 +76,36 @@ def compile_program(program, out_file_path):
                 output.write(f"    pop rbx\n")
                 output.write(f"    add rax, rbx\n")
                 output.write(f"    push rax\n\n")
-            
+
             elif opcode[0] == OP_SUBTRACT:
                 output.write(f"    pop rbx\n")
                 output.write(f"    pop rax\n")
                 output.write(f"    sub rax, rbx\n")
                 output.write(f"    push rax\n\n")
+
+            elif opcode[0] == OP_SHIFT_LEFT:
+                output.write(f"    pop rcx\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    shl rbx, cl\n")
+                output.write(f"    push rbx\n\n")
+
+            elif opcode[0] == OP_SHIFT_RIGHT:
+                output.write(f"    pop rcx\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    shr rbx, cl\n")
+                output.write(f"    push rbx\n\n")
+
+            elif opcode[0] == OP_BITWISE_AND:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    and rbx, rax\n")
+                output.write(f"    push rbx\n\n")
+
+            elif opcode[0] == OP_BITWISE_OR:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    or rbx, rax\n")
+                output.write(f"    push rbx\n\n")
 
             elif opcode[0] == OP_PRINT:
                 output.write(f"    pop rdi\n")
@@ -131,10 +157,10 @@ def compile_program(program, out_file_path):
                 output.write(f"    pop rax\n")
                 output.write(f"    test rax, rax\n")
                 output.write(f"    jz addr_{opcode[1]}\n\n")
-            
+
             elif opcode[0] == OP_MEM:
                 output.write(f"    push mem\n\n")
-            
+
             elif opcode[0] == OP_LOAD:
                 output.write(f"    pop rax\n")
                 output.write(f"    xor rbx, rbx\n")
