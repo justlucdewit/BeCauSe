@@ -82,7 +82,10 @@ def lex_line(line):
 
         if line[col] == '"':
             col_end = find_col(line, col + 1, lambda x: x == '"')
-            yield (col, (TOK_STRING, line[col + 1:col_end]))
+            text_of_token = bytes(
+                line[col + 1:col_end], 'utf-8').decode("unicode_escape")
+
+            yield (col, (TOK_STRING, text_of_token))
             col = find_col(line, col_end + 1, lambda x: not x.isspace())
         else:
             col_end = find_col(line, col, lambda x: x.isspace())
