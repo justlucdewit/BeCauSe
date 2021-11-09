@@ -1,7 +1,7 @@
 from modules.opcodes import *
 
 
-def compile_program(program, out_file_path):
+def compile_program_linux_x86_64(program, out_file_path):
     with open(out_file_path, "w+") as output:
         # text segment
         output.write("segment .text\n\n")

@@ -7,8 +7,10 @@ from modules.opcodes import *
 import subprocess
 from modules.parser import *
 
+
 def uncons(xs):
     return (xs[0], xs[1:])
+
 
 if __name__ == "__main__":
     (program_name, argv) = uncons(sys.argv)
@@ -19,7 +21,7 @@ if __name__ == "__main__":
         exit(-1)
 
     (subcommand, options) = uncons(argv)
-    
+
     debug = "debug" in options
 
     if (subcommand == "help"):
@@ -42,7 +44,7 @@ if __name__ == "__main__":
 
         (input_file_name, options) = uncons(options)
         program = load_program_from_file(input_file_name)
-        compile_program(program, "output.asm")
+        compile_program_linux_x86_64(program, "output.asm")
         subprocess.call(["nasm", "-felf64", "output.asm"])
         subprocess.call(["ld", "-o", "output", "output.o"])
         subprocess.call(["rm", "output.o"])

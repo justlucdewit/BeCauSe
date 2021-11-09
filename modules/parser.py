@@ -13,6 +13,7 @@ BUILDIN_WORDS = {
     '=': OP_EQUAL,
     'if': OP_IF,
     'else': OP_ELSE,
+    'macro': OP_MACRO,
     'end': OP_END,
     'dup': OP_DUP,
     '2dup': OP_2DUP,
@@ -32,22 +33,6 @@ BUILDIN_WORDS = {
     'syscall5': OP_SYSCALL5,
     'syscall6': OP_SYSCALL6,
 }
-
-
-def parse_token_as_op(token):
-    if token['type'] == TOK_INT:
-        return {'type': OP_PUSH, 'value': int(token['value']), 'loc': token['loc']}
-    elif token['type'] == TOK_STRING:
-        return {'type': OP_PUSH_STRING, 'value': token['value'], 'loc': token['loc']}
-    elif token['type'] == TOK_WORD:
-        if token['value'] in BUILDIN_WORDS:
-            return {'type': BUILDIN_WORDS[token['value']], 'loc': token['loc']}
-        else:
-            (file_path, row, col) = token['loc']
-            word = token['value']
-            print(
-                f"{file_path}:{row}:{col}:\n\tUnexpected word '{word}'")
-            exit(-1)
 
 
 def find_col(line, start, predicate):
@@ -94,9 +79,26 @@ def lex_line(line):
 
 
 def crossreference_blocks(program):
+    reversed_program = list(reversed(program))
     stack = []
-    for ip in range(len(program)):
-        op = program[ip]
+    ip = 0
+    macros = {}
+
+    while len(reversed_program) > 0:
+        op = None
+        if op['type'] == TOK_INT:
+            return {'type': OP_PUSH, 'value': int(op['value']), 'loc': op['loc']}
+        elif op['type'] == TOK_STRING:
+            return {'type': OP_PUSH_STRING, 'value': op['value'], 'loc': op['loc']}
+        elif op['type'] == TOK_WORD:
+            if op['value'] in BUILDIN_WORDS:
+                return {'type': BUILDIN_WORDS[op['value']], 'loc': op['loc']}
+        else:
+            (file_path, row, col) = op['loc']
+            word = op['value']
+            print(f"{file_path}:{row}:{col}:\n\tUnexpected word '{word}'")
+            exit(1)
+
         if op['type'] == OP_IF:
             stack.append(ip)
 
@@ -105,7 +107,7 @@ def crossreference_blocks(program):
 
             if program[if_ip]['type'] != OP_IF:
                 print("Parse Error: else can only be used with 'if' blocks")
-                exit(-1)
+                exit(1)
 
             program[if_ip]['reference'] = ip + 1
             stack.append(ip)
@@ -123,8 +125,8 @@ def crossreference_blocks(program):
 
             else:
                 print(
-                    "Parse Error: end can only be used to close 'if' and 'else' and 'do' blocks")
-                exit(-1)
+                    "Parse Error: end can only be used to close 'if', 'else', 'do' and 'macro' blocks")
+                exit(1)
 
         elif op['type'] == OP_WHILE:
             stack.append(ip)
@@ -133,6 +135,71 @@ def crossreference_blocks(program):
             while_ip = stack.pop()
             program[ip]['reference'] = while_ip
             stack.append(ip)
+
+        elif op['type'] == OP_MACRO:
+            # Macro must be followed by a name, code and 'end'
+            if len(reversed_program) == 0:
+                (file_path, row, col) = op['loc']
+                print(f"{file_path}:{row}:{col}:\n\tWrong usage of macro feature\n\tmacro must be followed by a name, then some code, then the 'end keyword'.\n\tfor Example:\n\n\tmacro write\n\t\t1 1 syscall3\n\tend")
+                exit(1)
+
+            # Get the token name
+            macro_name_token = reversed_program.pop()
+
+            if macro_name_token['type'] != TOK_WORD:
+                (file_path, row, col) = macro_name_token['loc']
+                macro_name = macro_name_token['value']
+                tokentype_str = "unknown"
+
+                if macro_name_token['type'] == TOK_STRING:
+                    tokentype_str = "string"
+                elif macro_name_token['type'] == TOK_INT:
+                    tokentype_str = "integer"
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tInvalid macro name. expected a word, got {tokentype_str} '{macro_name}'")
+                exit(1)
+
+            macro_name = macro_name_token['value']
+
+            # Make sure no 2 macros with same name get defined
+            if macro_name in macros:
+                (file_path, row, col) = macro_name_token['loc']
+                (macro_file_path, macro_row,
+                 macro_col) = macros[macro_name]['loc']
+                print(
+                    f"{file_path}:{row}:{col}:\n\tMacro '{macro_name_token['value']}' already exists at {macro_file_path}:{macro_row}:{macro_col}")
+                exit(1)
+
+            # Make sure no buildins get overridden by macros
+            if macro_name in BUILDIN_WORDS:
+                (file_path, row, col) = macro_name_token['loc']
+                print(
+                    f"{file_path}:{row}:{col}:\n\tMacro '{macro_name_token['value']}' is overriding a build-in word")
+                exit(1)
+
+            macro = {
+                'loc': op['loc'],
+                'tokens': []
+            }
+
+            while len(reversed_program) > 0:
+                token = reversed_program.pop()
+
+                if token['type'] == TOK_WORD and token['value'] == 'end':
+                    break
+                else:
+                    macro['tokens'].append(token)
+
+            if token['type'] != TOK_WORD or token['value'] != 'end':
+                (file_path, row, col) = token['loc']
+                print(
+                    f"{file_path}:{row}:{col}:\n\tMacros must end with 'end' keyword")
+                exit(1)
+
+            macros[macro_name] = macro
+
+        ip += 1
 
     return program
 
@@ -151,4 +218,4 @@ def lex_file(file_path):
 
 
 def load_program_from_file(file_path):
-    return crossreference_blocks([parse_token_as_op(token) for token in lex_file(file_path)])
+    return crossreference_blocks(lex_file(file_path))  # Parse token as op

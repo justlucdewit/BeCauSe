@@ -44,6 +44,7 @@ OP_END = register_operation("END")
 OP_ELSE = register_operation("ELSE")
 OP_WHILE = register_operation("WHILE")
 OP_DO = register_operation("DO")
+OP_MACRO = register_operation("MACRO")
 
 # IO
 OP_PRINT = register_operation("PRINT")
