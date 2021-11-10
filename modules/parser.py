@@ -78,31 +78,42 @@ def lex_line(line):
             col = find_col(line, col_end, lambda x: not x.isspace())
 
 
-def crossreference_blocks(program):
-    reversed_program = list(reversed(program))
+def crossreference_blocks(tokens):
+    reversed_program = list(reversed(tokens))
     stack = []
     ip = 0
     macros = {}
+    program = []
 
     while len(reversed_program) > 0:
+        token = reversed_program.pop()
         op = None
-        if op['type'] == TOK_INT:
-            return {'type': OP_PUSH, 'value': int(op['value']), 'loc': op['loc']}
-        elif op['type'] == TOK_STRING:
-            return {'type': OP_PUSH_STRING, 'value': op['value'], 'loc': op['loc']}
-        elif op['type'] == TOK_WORD:
-            if op['value'] in BUILDIN_WORDS:
-                return {'type': BUILDIN_WORDS[op['value']], 'loc': op['loc']}
-        else:
-            (file_path, row, col) = op['loc']
-            word = op['value']
-            print(f"{file_path}:{row}:{col}:\n\tUnexpected word '{word}'")
-            exit(1)
+        if token['type'] == TOK_INT:
+            op = {'type': OP_PUSH, 'value': int(
+                token['value']), 'loc': token['loc']}
+        elif token['type'] == TOK_STRING:
+            op = {'type': OP_PUSH_STRING,
+                  'value': token['value'], 'loc': token['loc']}
+        elif token['type'] == TOK_WORD:
+            if token['value'] in BUILDIN_WORDS:
+                op = {
+                    'type': BUILDIN_WORDS[token['value']], 'loc': token['loc']}
+            elif token['value'] in macros:
+                reversed_program += reversed(macros[token['value']]['tokens'])
+                continue
+            else:
+                (file_path, row, col) = token['loc']
+                word = token['value']
+                print(f"{file_path}:{row}:{col}:\n\tUnexpected word '{word}'")
+                exit(1)
 
         if op['type'] == OP_IF:
+            program.append(op)
             stack.append(ip)
+            ip += 1
 
         elif op['type'] == OP_ELSE:
+            program.append(op)
             if_ip = stack.pop()
 
             if program[if_ip]['type'] != OP_IF:
@@ -111,8 +122,10 @@ def crossreference_blocks(program):
 
             program[if_ip]['reference'] = ip + 1
             stack.append(ip)
+            ip += 1
 
         elif op['type'] == OP_END:
+            program.append(op)
             block_ip = stack.pop()
 
             if program[block_ip]['type'] == OP_IF or program[block_ip]['type'] == OP_ELSE:
@@ -127,14 +140,19 @@ def crossreference_blocks(program):
                 print(
                     "Parse Error: end can only be used to close 'if', 'else', 'do' and 'macro' blocks")
                 exit(1)
+            ip += 1
 
         elif op['type'] == OP_WHILE:
+            program.append(op)
             stack.append(ip)
+            ip += 1
 
         elif op['type'] == OP_DO:
+            program.append(op)
             while_ip = stack.pop()
             program[ip]['reference'] = while_ip
             stack.append(ip)
+            ip += 1
 
         elif op['type'] == OP_MACRO:
             # Macro must be followed by a name, code and 'end'
@@ -198,8 +216,16 @@ def crossreference_blocks(program):
                 exit(1)
 
             macros[macro_name] = macro
+        else:
+            program.append(op)
+            ip += 1
 
-        ip += 1
+    # for token in program:
+    #     name = instructions_map[token['type']]
+    #     if 'value' in token:
+    #         name += f" {token['value']}"
+    #     print(name)
+
 
     return program
 

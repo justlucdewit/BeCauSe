@@ -88,14 +88,14 @@ def run_program(program):
             print(stack.pop())
 
         elif operation['type'] == OP_GREATER:
-            b = stack.pop()
             a = stack.pop()
-            stack.append(int(a > b))
+            b = stack.pop()
+            stack.append(int(b > a))
 
         elif operation['type'] == OP_SMALLER:
+            a = stack.pop()
             b = stack.pop()
-            c = stack.pop()
-            stack.append(int(a < b))
+            stack.append(int(b < a))
 
         elif operation['type'] == OP_EQUAL:
             a = stack.pop()
