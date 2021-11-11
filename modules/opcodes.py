@@ -56,14 +56,18 @@ OP_SYSCALL4 = register_operation("SYSCALL4")
 OP_SYSCALL5 = register_operation("SYSCALL5")
 OP_SYSCALL6 = register_operation("SYSCALL6")
 
+# Memory
 OP_MEM = register_operation("MEM")
 OP_STORE = register_operation("STORE")
 OP_LOAD = register_operation("LOAD")
 
+# Other
+OP_IMPORT = register_operation("IMPORT")
+
 # Token types
 TOK_INT = register_operation("INT")
 TOK_WORD = register_operation("WORD")
-TOK_STRING = register_operation("WORD")
+TOK_STRING = register_operation("STRING")
 
 # Non opcodes
 NUMBER_OF_OPS = register_operation("NUM_OPS")

@@ -1,4 +1,5 @@
 from modules.opcodes import *
+from modules.stdlibs import *
 
 BUILDIN_WORDS = {
     '>': OP_GREATER,
@@ -32,6 +33,7 @@ BUILDIN_WORDS = {
     'syscall4': OP_SYSCALL4,
     'syscall5': OP_SYSCALL5,
     'syscall6': OP_SYSCALL6,
+    'import': OP_IMPORT
 }
 
 
@@ -78,7 +80,7 @@ def lex_line(line):
             col = find_col(line, col_end, lambda x: not x.isspace())
 
 
-def crossreference_blocks(tokens):
+def crossreference_blocks(tokens, file_path):
     reversed_program = list(reversed(tokens))
     stack = []
     ip = 0
@@ -154,6 +156,35 @@ def crossreference_blocks(tokens):
             stack.append(ip)
             ip += 1
 
+        elif op['type'] == OP_IMPORT:
+            # Import must be followed by a string containing the file
+            if len(reversed_program) == 0 or reversed_program[len(reversed_program) - 1]['type'] != TOK_STRING:
+                (file_path, row, col) = op['loc']
+                print(f"{file_path}:{row}:{col}:\n\tWrong usage of import feature\n\timport must be followed by a string containing the path to the file to import\n\tfor Example:\n\n\timport \"std/io\"")
+                exit(1)
+
+            import_path_token = reversed_program.pop()
+            result = None
+
+            if import_path_token['value'] in stdlibs:
+                result = lex_text(
+                    import_path_token['value'], stdlibs[import_path_token['value']])
+            else:
+                local_base_path = "/".join(file_path.split('/')[:-1])
+                if local_base_path != "":
+                    local_base_path = local_base_path + "/"
+
+                try:
+                    result = lex_file(local_base_path +
+                                      import_path_token['value'] + ".bcs")
+                except FileNotFoundError:
+                    (file_path, row, col) = op['loc']
+                    print(
+                        f"{file_path}:{row}:{col}:\n\tCould not find file {local_base_path + import_path_token['value'] + '.bcs'} to import")
+                    exit(1)
+
+            reversed_program += reversed(result)
+
         elif op['type'] == OP_MACRO:
             # Macro must be followed by a name, code and 'end'
             if len(reversed_program) == 0:
@@ -226,7 +257,6 @@ def crossreference_blocks(tokens):
     #         name += f" {token['value']}"
     #     print(name)
 
-
     return program
 
 
@@ -243,5 +273,15 @@ def lex_file(file_path):
                 for (col, (token_type, token_value)) in lex_line(line)]
 
 
+def lex_text(file_path, text):
+    text = text.splitlines()
+    return [{'loc': (file_path, row + 1, col + 1),  # Plus 1 because we want it to be 1 indexed
+             'type': token_type,
+             'value': token_value}
+            for (row, line) in enumerate(preprocess_file(text))
+            for (col, (token_type, token_value)) in lex_line(line)]
+
+
 def load_program_from_file(file_path):
-    return crossreference_blocks(lex_file(file_path))  # Parse token as op
+    # Parse token as op
+    return crossreference_blocks(lex_file(file_path), file_path)

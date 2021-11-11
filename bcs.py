@@ -24,10 +24,10 @@ if __name__ == "__main__":
 
     debug = "debug" in options
 
-    if (subcommand == "help"):
+    if subcommand == "help":
         if len(options) < 1:
             usage(program_name)
-    elif (subcommand == "run"):
+    elif subcommand == "run":
         if len(options) < 1:
             usage(program_name)
             print("CLI Error: no filename given\n")
@@ -36,7 +36,7 @@ if __name__ == "__main__":
         (input_file_name, options) = uncons(options)
         program = load_program_from_file(input_file_name)
         run_program(program)
-    elif (subcommand == "com"):
+    elif subcommand == "com":
         if len(options) < 1:
             usage(program_name)
             print("CLI Error: no filename given\n")
