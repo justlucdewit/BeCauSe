@@ -24,7 +24,7 @@ mem BOARD_SIZE 2 - + 1 .
         else
             mem BOARD_SIZE + CHAR_SPACE .
         end
-        1 mem BOARD_SIZE + WRITE
+        1 mem BOARD_SIZE + IO_WRITE
 
         1 +
     end
@@ -32,7 +32,7 @@ mem BOARD_SIZE 2 - + 1 .
     
     // Print new line
     mem BOARD_SIZE + CHAR_ENTER .
-    1 mem BOARD_SIZE + WRITE
+    1 mem BOARD_SIZE + IO_WRITE
 
     // Compute next generation
     // (mem[0] << 1) | mem[1]

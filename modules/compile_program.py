@@ -46,17 +46,28 @@ def compile_program_linux_x86_64(program, out_file_path):
         output.write("global _start\n")
         output.write("_start:\n\n")
 
+        strings = []
+
+        for op in program:
+            if op['type'] == OP_PUSH_STRING:
+                op['string_id'] = f"string_literal_{len(strings)}"
+                strings.append({ "id": f"string_literal_{len(strings)}", "data": op['value'] })
+
         for ip in range(len(program)):
             opcode = program[ip]
 
+            instruction_value = ' ' + str(opcode['value']).replace('\n', '\\n') if 'value' in opcode else ''
+
             output.write(
-                f"addr_{ip}: ; ({instructions_map[opcode['type']]}{' ' + str(opcode['value']) if 'value' in opcode else ''})\n")
+                f"addr_{ip}: ; ({instructions_map[opcode['type']]}{instruction_value})\n")
 
             if opcode['type'] == OP_PUSH:
                 output.write(f"    push {opcode['value']}\n\n")
 
             elif opcode['type'] == OP_PUSH_STRING:
-                pass
+                string_length = len(list(filter(lambda x: x['id'] == opcode['string_id'], strings))[0]['data'])
+                output.write(f"    push {string_length}\n")
+                output.write(f"    push {opcode['string_id']}\n\n")
 
             elif opcode['type'] == OP_DUP:
                 output.write(f"    pop rax\n")
@@ -245,7 +256,13 @@ def compile_program_linux_x86_64(program, out_file_path):
         output.write("    mov rax, 60\n")
         output.write("    mov rdi, 0\n")
         output.write("    syscall\n")
-        output.write("    ret")
+        output.write("    ret\n\n")
+
+        if len(strings) > 0:
+            output.write("section .data\n")
+            for string in strings:
+                string_bytes = ", ".join(list(map(lambda x: str(ord(x)), list(string['data']))))
+                output.write(f"    {string['id']}: db {string_bytes}\n")
 
         # Create memory segment
         output.write("\n\nsegment .bss\n")
