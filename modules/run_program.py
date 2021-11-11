@@ -174,8 +174,24 @@ def run_program(program):
 
 
 def emulate_unix(syscall, values):
+    # sys read
+    if syscall == 0:
+        if len(values) < 3:
+            unix_emulation_error(3, len(values))
+        
+        # read from stdin
+        if values[0] == 0:
+            user_input = input() + "\n"
+            i = 0
+
+            if len(user_input) < values[2]:
+                user_input += "\0" * (values[2] - len(user_input))
+
+            for i in range(values[2]):
+                memory[values[1] + i] = ord(user_input[i])
+
     # sys write
-    if syscall == 1:
+    elif syscall == 1:
         if (len(values) < 3):
             unix_emulation_error(3, len(values))
 
