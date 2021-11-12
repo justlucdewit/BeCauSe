@@ -1,0 +1,8 @@
+// BCS E011
+// Coded by luke_
+// 12-11-2021
+
+import "std/io"
+
+// Print 'Hello World!'
+"Hello World!\n" IO_WRITE

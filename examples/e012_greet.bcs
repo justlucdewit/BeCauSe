@@ -1,0 +1,19 @@
+// BCS E012
+// Coded by luke_
+// 12-11-2021
+
+import "std/io"
+
+macro name_len 5 end
+
+// Read name into memory position 0
+"Good day, what is your name: " IO_WRITE
+
+// Get the user input, and store the name (char[60]) in memory position 0
+mem name_len IO_READ
+
+// Print well hello there
+"Well hello there " IO_WRITE
+
+// Print the char[60] at mem location 0
+name_len mem IO_WRITE
