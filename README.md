@@ -1,4 +1,4 @@
-![test](logo-gray.svg)
+![test](misc/logo-gray.svg)
 
 # BeCauSe
 ## The Basic like, Compiled, Stack based language
