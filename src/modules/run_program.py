@@ -64,6 +64,11 @@ def run_program(program):
             b = stack.pop()
             stack.append(b - a)
 
+        elif operation['type'] == OP_MULTIPLY:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(b * a)
+
         elif operation['type'] == OP_SHIFT_LEFT:
             a = stack.pop()
             b = stack.pop()

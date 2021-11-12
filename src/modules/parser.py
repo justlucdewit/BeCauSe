@@ -5,6 +5,7 @@ BUILDIN_WORDS = {
     '>': OP_GREATER,
     '<': OP_SMALLER,
     '+': OP_ADD,
+    '*': OP_MULTIPLY,
     '-': OP_SUBTRACT,
     '>>': OP_SHIFT_RIGHT,
     '<<': OP_SHIFT_LEFT,

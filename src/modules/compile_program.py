@@ -110,6 +110,13 @@ def compile_program_linux_x86_64(program, out_file_path):
                 output.write(f"    sub rax, rbx\n")
                 output.write(f"    push rax\n\n")
 
+            elif opcode['type'] == OP_MULTIPLY:
+                output.write(f"    pop rax\n")
+                output.write(f"    pop rbx\n")
+                output.write(f"    mul rbx\n")
+                output.write(f"    push rax\n\n")
+
+
             elif opcode['type'] == OP_SHIFT_LEFT:
                 output.write(f"    pop rcx\n")
                 output.write(f"    pop rbx\n")

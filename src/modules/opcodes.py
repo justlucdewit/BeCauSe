@@ -30,6 +30,7 @@ OP_OVER = register_operation("OVER")
 # Math
 OP_ADD = register_operation("ADD")
 OP_SUBTRACT = register_operation("SUBTRACT")
+OP_MULTIPLY = register_operation("MULTIPLY")
 OP_GREATER = register_operation("GREATER")
 OP_SMALLER = register_operation("SMALLER")
 OP_EQUAL = register_operation("EQUAL")
