@@ -63,17 +63,41 @@ def lex_word(token_as_text):
         return (TOK_WORD, token_as_text)
 
 
-def lex_line(line):
+def lex_line(file_path, row, line):
     col = find_col(line, 0, lambda x: not x.isspace())
     while col < len(line):
+        loc = (file_path, row + 1, col + 1)
         col_end = None
 
         if line[col] == '"':
             col_end = find_col(line, col + 1, lambda x: x == '"')
+            if col_end >= len(line) or line[col_end] != '\"':
+                print(f"{file_path}:{row + 1}:{col + 1}:\n\tUnclosed character literal")
+                exit(1)
+
             text_of_token = bytes(
                 line[col + 1:col_end], 'utf-8').decode("unicode_escape")
 
             yield (col, (TOK_STRING, text_of_token))
+            col = find_col(line, col_end + 1, lambda x: not x.isspace())
+        elif line[col] == '\'':
+            col_end = find_col(line, col + 1, lambda x: x == '\'')
+            if col_end >= len(line) or line[col_end] != '\'':
+                print(f"{file_path}:{row + 1}:{col + 1}:\n\tUnclosed character literal")
+                exit(1)
+
+            text_of_token = bytes(
+                line[col + 1:col_end], 'utf-8').decode("unicode_escape")
+
+            if len(text_of_token) > 1:
+                print(f"{file_path}:{row + 1}:{col + 1}:\n\tCharacter literal found with multiple characters, use string instead")
+                exit(1)
+
+            if len(text_of_token) == 0:
+                print(f"{file_path}:{row + 1}:{col + 1}:\n\tCharacter literal found no character inside, use string instead")
+                exit(1)
+
+            yield (col, (TOK_CHAR, text_of_token))
             col = find_col(line, col_end + 1, lambda x: not x.isspace())
         else:
             col_end = find_col(line, col, lambda x: x.isspace())
@@ -97,6 +121,9 @@ def crossreference_blocks(tokens, file_path):
         elif token['type'] == TOK_STRING:
             op = {'type': OP_PUSH_STRING,
                   'value': token['value'], 'loc': token['loc']}
+        elif token['type'] == TOK_CHAR:
+            op = {'type': OP_PUSH,
+                  'value': ord(token['value']), 'loc': token['loc']}
         elif token['type'] == TOK_WORD:
             if token['value'] in BUILDIN_WORDS:
                 op = {
@@ -271,7 +298,7 @@ def lex_file(file_path):
                  'type': token_type,
                  'value': token_value}
                 for (row, line) in enumerate(preprocess_file(f.readlines()))
-                for (col, (token_type, token_value)) in lex_line(line)]
+                for (col, (token_type, token_value)) in lex_line(file_path, row, line)]
 
 
 def lex_text(file_path, text):
@@ -280,7 +307,7 @@ def lex_text(file_path, text):
              'type': token_type,
              'value': token_value}
             for (row, line) in enumerate(preprocess_file(text))
-            for (col, (token_type, token_value)) in lex_line(line)]
+            for (col, (token_type, token_value)) in lex_line(file_path, row, line)]
 
 
 def load_program_from_file(file_path):

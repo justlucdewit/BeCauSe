@@ -69,6 +69,7 @@ OP_IMPORT = register_operation("IMPORT")
 TOK_INT = register_operation("INT")
 TOK_WORD = register_operation("WORD")
 TOK_STRING = register_operation("STRING")
+TOK_CHAR = register_operation("CHARACTER")
 
 # Non opcodes
 NUMBER_OF_OPS = register_operation("NUM_OPS")

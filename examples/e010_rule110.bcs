@@ -7,9 +7,6 @@ import "std/io"
 // Macro's for constants
 macro BOARD_SIZE  100 end
 macro RULE_NUMBER 110 end
-macro CHAR_SPACE  32 end
-macro CHAR_ASTRIX 42 end
-macro CHAR_ENTER  10 end
 
 // Set the last cell to true
 mem BOARD_SIZE 2 - + 1 .
@@ -20,9 +17,9 @@ mem BOARD_SIZE 2 - + 1 .
     // Loop over the memory chunk to print each cell
     0 while dup BOARD_SIZE 2 - < do
         dup mem + , if
-            mem BOARD_SIZE + CHAR_ASTRIX .
+            mem BOARD_SIZE + '*' .
         else
-            mem BOARD_SIZE + CHAR_SPACE .
+            mem BOARD_SIZE + ' ' .
         end
         1 mem BOARD_SIZE + IO_WRITE
 
@@ -31,7 +28,7 @@ mem BOARD_SIZE 2 - + 1 .
     drop
     
     // Print new line
-    mem BOARD_SIZE + CHAR_ENTER .
+    mem BOARD_SIZE + '\n' .
     1 mem BOARD_SIZE + IO_WRITE
 
     // Compute next generation
