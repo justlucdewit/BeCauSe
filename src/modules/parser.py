@@ -232,6 +232,8 @@ def crossreference_blocks(tokens, file_path):
                     tokentype_str = "string"
                 elif macro_name_token['type'] == TOK_INT:
                     tokentype_str = "integer"
+                elif macro_name_token['type'] == TOK_CHAR:
+                    tokentype_str = "character"
 
                 print(
                     f"{file_path}:{row}:{col}:\n\tInvalid macro name. expected a word, got {tokentype_str} '{macro_name}'")
