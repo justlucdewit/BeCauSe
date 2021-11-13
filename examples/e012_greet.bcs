@@ -4,7 +4,7 @@
 
 import "std/io"
 
-macro name_len 5 end
+macro name_len 50 end
 
 // Read name into memory position 0
 "Good day, what is your name: " IO_WRITE
