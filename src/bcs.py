@@ -26,7 +26,7 @@ arg_parser.add_argument("-o", "--output", metavar='<file>', help="Directs the ou
 
 args = arg_parser.parse_args(sysargs)
 
-if not args.debug and not args.interpret and not args.run and not args.version and args.output == None:
+if not args.debug and not args.interpret and not args.run and not args.version and args.output == None and args.filename == '':
     print("test")
     arg_parser.print_help()
     exit(0)
@@ -41,18 +41,19 @@ if __name__ == "__main__":
         program = load_program_from_file(args.filename)
         run_program(program)
 
-    # elif subcommand == "com":
-    #     if len(options) < 1:
-    #         usage(program_name)
-    #         print("CLI Error: no filename given\n")
-    #         exit(-1)
+    else:
+        if args.filename == '':
+            print("error: no input file given\n")
+            exit(-1)
 
-    #     (input_file_name, options) = uncons(options)
-    #     program = load_program_from_file(input_file_name)
-    #     compile_program_linux_x86_64(program, "output.asm")
-    #     subprocess.call(["nasm", "-felf64", "output.asm"])
-    #     subprocess.call(["ld", "-o", "output", "output.o"])
-    #     subprocess.call(["rm", "output.o"])
+        output_asm_name = "output.asm" if args.output == None else args.output + ".asm"
 
-    #     if not args.debug:
-    #         subprocess.call(["rm", "output.asm"])
+        program = load_program_from_file(args.filename)
+        compile_program_linux_x86_64(program, output_asm_name)
+        
+        subprocess.call(["nasm", "-felf64", output_asm_name])
+        subprocess.call(["ld", "-o", args.output if args.output != None else "output", args.output + '.o' if args.output != None else 'output.o'])
+        subprocess.call(["rm", args.output + '.o' if args.output != None else 'output.o'])
+
+        if not args.debug:
+            subprocess.call(["rm", output_asm_name])
