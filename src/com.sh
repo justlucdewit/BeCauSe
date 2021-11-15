@@ -1,3 +1,3 @@
-python3 bcs.py com ../test/test.bcs debug
+python3 bcs.py test/test.bcs -o output -d
 
 ./output
