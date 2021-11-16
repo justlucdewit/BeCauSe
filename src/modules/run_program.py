@@ -1,4 +1,12 @@
-from modules.opcodes import *
+from modules.opcodes import (MEMORY_CAPACITY, OP_2DUP, OP_ADD, OP_BITWISE_AND,
+                             OP_BITWISE_OR, OP_DO, OP_DROP, OP_DUP, OP_ELSE,
+                             OP_END, OP_EQUAL, OP_GREATER, OP_IF, OP_LOAD,
+                             OP_MEM, OP_MULTIPLY, OP_OVER, OP_PRINT,
+                             OP_PUSH_STRING, OP_SHIFT_LEFT, OP_SHIFT_RIGHT,
+                             OP_SMALLER, OP_STORE, OP_SUBTRACT, OP_SWAP,
+                             OP_SYSCALL0, OP_SYSCALL1, OP_SYSCALL2,
+                             OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
+                             OP_SYSCALL6, OP_WHILE, STRING_CAPACITY, OP_PUSH)
 
 debug = False
 stack = []
@@ -172,7 +180,9 @@ def run_program(program):
             ), stack.pop(), stack.pop(), stack.pop(), stack.pop()])
 
         else:
-            print("Simulation Error: Unknown opcode encountered in run_program")
+            print(
+                "Simulation Error: Unknown opcode "
+                "encountered in run_program")
             exit(-1)
 
         ip += 1
@@ -183,7 +193,7 @@ def emulate_unix(syscall, values):
     if syscall == 0:
         if len(values) < 3:
             unix_emulation_error(3, len(values))
-        
+
         # read from stdin
         if values[0] == 0:
             user_input = input() + "\n"
@@ -214,5 +224,6 @@ def emulate_unix(syscall, values):
 
 def unix_emulation_error(expected_count, received_count):
     print(
-        f"Simulation Error: expected at least {expected_count} values for syscall, got {received_count} values")
+        f"Simulation Error: expected at least {expected_count} values for "
+        "syscall, got {received_count} values")
     exit(-1)

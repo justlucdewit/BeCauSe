@@ -1,5 +1,15 @@
-from modules.opcodes import *
-from modules.stdlibs import *
+from modules.opcodes import (OP_2DUP, OP_ADD, OP_BITWISE_AND,
+                             OP_BITWISE_OR, OP_DO, OP_DROP, OP_DUP, OP_ELSE,
+                             OP_END, OP_EQUAL, OP_GREATER, OP_IF, OP_IMPORT,
+                             OP_LOAD, OP_MACRO, OP_MEM, OP_MULTIPLY, OP_OVER,
+                             OP_PRINT, OP_PUSH_STRING, OP_SHIFT_LEFT,
+                             OP_SHIFT_RIGHT, OP_SMALLER, OP_STORE, OP_SUBTRACT,
+                             OP_SWAP, OP_SYSCALL0, OP_SYSCALL1, OP_SYSCALL2,
+                             OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
+                             OP_SYSCALL6, OP_WHILE, TOK_CHAR, TOK_INT,
+                             TOK_STRING, TOK_WORD, OP_PUSH)
+
+from modules.stdlibs import stdlibs
 
 BUILDIN_WORDS = {
     '>': OP_GREATER,
@@ -66,13 +76,14 @@ def lex_word(token_as_text):
 def lex_line(file_path, row, line):
     col = find_col(line, 0, lambda x: not x.isspace())
     while col < len(line):
-        loc = (file_path, row + 1, col + 1)
         col_end = None
 
         if line[col] == '"':
             col_end = find_col(line, col + 1, lambda x: x == '"')
             if col_end >= len(line) or line[col_end] != '\"':
-                print(f"{file_path}:{row + 1}:{col + 1}:\n\tUnclosed character literal")
+                print(
+                    f"{file_path}:{row + 1}:{col + 1}:"
+                    "\n\tUnclosed character literal")
                 exit(1)
 
             text_of_token = bytes(
@@ -83,18 +94,24 @@ def lex_line(file_path, row, line):
         elif line[col] == '\'':
             col_end = find_col(line, col + 1, lambda x: x == '\'')
             if col_end >= len(line) or line[col_end] != '\'':
-                print(f"{file_path}:{row + 1}:{col + 1}:\n\tUnclosed character literal")
+                print(
+                    f"{file_path}:{row + 1}:{col + 1}:\n\tUnclosed character "
+                    "literal")
                 exit(1)
 
             text_of_token = bytes(
                 line[col + 1:col_end], 'utf-8').decode("unicode_escape")
 
             if len(text_of_token) > 1:
-                print(f"{file_path}:{row + 1}:{col + 1}:\n\tCharacter literal found with multiple characters, use string instead")
+                print(
+                    f"{file_path}:{row + 1}:{col + 1}:\n\tCharacter literal "
+                    "found with multiple characters, use string instead")
                 exit(1)
 
             if len(text_of_token) == 0:
-                print(f"{file_path}:{row + 1}:{col + 1}:\n\tCharacter literal found no character inside, use string instead")
+                print(
+                    f"{file_path}:{row + 1}:{col + 1}:\n\tCharacter literal "
+                    "found no character inside, use string instead")
                 exit(1)
 
             yield (col, (TOK_CHAR, text_of_token))
@@ -158,7 +175,8 @@ def crossreference_blocks(tokens, file_path):
             program.append(op)
             block_ip = stack.pop()
 
-            if program[block_ip]['type'] == OP_IF or program[block_ip]['type'] == OP_ELSE:
+            if (program[block_ip]['type'] == OP_IF or
+                    program[block_ip]['type'] == OP_ELSE):
                 program[block_ip]['reference'] = ip
                 program[ip]['reference'] = ip + 1
 
@@ -168,7 +186,8 @@ def crossreference_blocks(tokens, file_path):
 
             else:
                 print(
-                    "Parse Error: end can only be used to close 'if', 'else', 'do' and 'macro' blocks")
+                    "Parse Error: end can only be used to close 'if', 'else', "
+                    "'do' and 'macro' blocks")
                 exit(1)
             ip += 1
 
@@ -186,9 +205,16 @@ def crossreference_blocks(tokens, file_path):
 
         elif op['type'] == OP_IMPORT:
             # Import must be followed by a string containing the file
-            if len(reversed_program) == 0 or reversed_program[len(reversed_program) - 1]['type'] != TOK_STRING:
+            if (len(reversed_program) == 0 or
+                    reversed_program[len(reversed_program) - 1]
+                    ['type'] != TOK_STRING):
+
                 (file_path, row, col) = op['loc']
-                print(f"{file_path}:{row}:{col}:\n\tWrong usage of import feature\n\timport must be followed by a string containing the path to the file to import\n\tfor Example:\n\n\timport \"std/io\"")
+                print(
+                    f"{file_path}:{row}:{col}:\n\tWrong usage of import"
+                    "feature\n\timport must be followed by a string containing"
+                    " the path to the file to import\n\tfor Example:\n\n\t"
+                    "import \"std/io\"")
                 exit(1)
 
             import_path_token = reversed_program.pop()
@@ -196,7 +222,8 @@ def crossreference_blocks(tokens, file_path):
 
             if import_path_token['value'] in stdlibs:
                 result = lex_text(
-                    import_path_token['value'], stdlibs[import_path_token['value']])
+                    import_path_token['value'],
+                    stdlibs[import_path_token['value']])
             else:
                 local_base_path = "/".join(file_path.split('/')[:-1])
                 if local_base_path != "":
@@ -207,8 +234,14 @@ def crossreference_blocks(tokens, file_path):
                                       import_path_token['value'] + ".bcs")
                 except FileNotFoundError:
                     (file_path, row, col) = op['loc']
+
+                    full_file_name = local_base_path + \
+                        import_path_token['value'] + '.bcs'
+
                     print(
-                        f"{file_path}:{row}:{col}:\n\tCould not find file {local_base_path + import_path_token['value'] + '.bcs'} to import")
+                        f"{file_path}:{row}:{col}:\n\tCould not find file "
+                        f"{full_file_name} to import")
+
                     exit(1)
 
             reversed_program += reversed(result)
@@ -217,7 +250,13 @@ def crossreference_blocks(tokens, file_path):
             # Macro must be followed by a name, code and 'end'
             if len(reversed_program) == 0:
                 (file_path, row, col) = op['loc']
-                print(f"{file_path}:{row}:{col}:\n\tWrong usage of macro feature\n\tmacro must be followed by a name, then some code, then the 'end keyword'.\n\tfor Example:\n\n\tmacro write\n\t\t1 1 syscall3\n\tend")
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tWrong usage of macro "
+                    "feature\n\tmacro must be followed by a name, then some "
+                    "code, then the 'end keyword'.\n\tfor Example:\n\n\tmacro "
+                    "write\n\t\t1 1 syscall3\n\tend")
+
                 exit(1)
 
             # Get the token name
@@ -236,7 +275,8 @@ def crossreference_blocks(tokens, file_path):
                     tokentype_str = "character"
 
                 print(
-                    f"{file_path}:{row}:{col}:\n\tInvalid macro name. expected a word, got {tokentype_str} '{macro_name}'")
+                    f"{file_path}:{row}:{col}:\n\tInvalid macro name. expected"
+                    f" a word, got {tokentype_str} '{macro_name}'")
                 exit(1)
 
             macro_name = macro_name_token['value']
@@ -246,15 +286,21 @@ def crossreference_blocks(tokens, file_path):
                 (file_path, row, col) = macro_name_token['loc']
                 (macro_file_path, macro_row,
                  macro_col) = macros[macro_name]['loc']
+                macro_name = macro_name_token['value']
                 print(
-                    f"{file_path}:{row}:{col}:\n\tMacro '{macro_name_token['value']}' already exists at {macro_file_path}:{macro_row}:{macro_col}")
+                    f"{file_path}:{row}:{col}:\n\tMacro '{macro_name}' already"
+                    " exists at {macro_file_path}:{macro_row}:{macro_col}")
                 exit(1)
 
             # Make sure no buildins get overridden by macros
             if macro_name in BUILDIN_WORDS:
                 (file_path, row, col) = macro_name_token['loc']
+                macro_name = macro_name_token['value']
+
                 print(
-                    f"{file_path}:{row}:{col}:\n\tMacro '{macro_name_token['value']}' is overriding a build-in word")
+                    f"{file_path}:{row}:{col}:\n\tMacro '{macro_name}' is "
+                    "overriding a build-in word")
+
                 exit(1)
 
             macro = {
@@ -273,7 +319,8 @@ def crossreference_blocks(tokens, file_path):
             if token['type'] != TOK_WORD or token['value'] != 'end':
                 (file_path, row, col) = token['loc']
                 print(
-                    f"{file_path}:{row}:{col}:\n\tMacros must end with 'end' keyword")
+                    f"{file_path}:{row}:{col}:\n\tMacros must end with 'end' "
+                    "keyword")
                 exit(1)
 
             macros[macro_name] = macro
@@ -296,20 +343,30 @@ def preprocess_file(file_content):
 
 def lex_file(file_path):
     with open(file_path, "r") as f:
-        return [{'loc': (file_path, row + 1, col + 1),  # Plus 1 because we want it to be 1 indexed
+        # Plus 1 because we want it to be 1 indexed
+        return [{'loc': (file_path, row + 1, col + 1),
                  'type': token_type,
                  'value': token_value}
                 for (row, line) in enumerate(preprocess_file(f.readlines()))
-                for (col, (token_type, token_value)) in lex_line(file_path, row, line)]
+                for (col, (token_type, token_value)) in lex_line(
+                    file_path,
+                    row,
+                    line)
+                ]
 
 
 def lex_text(file_path, text):
     text = text.splitlines()
-    return [{'loc': (file_path, row + 1, col + 1),  # Plus 1 because we want it to be 1 indexed
+    # Plus 1 because we want it to be 1 indexed
+    return [{'loc': (file_path, row + 1, col + 1),
              'type': token_type,
              'value': token_value}
             for (row, line) in enumerate(preprocess_file(text))
-            for (col, (token_type, token_value)) in lex_line(file_path, row, line)]
+            for (col, (token_type, token_value)) in lex_line(
+                file_path,
+                row,
+                line)
+            ]
 
 
 def load_program_from_file(file_path):

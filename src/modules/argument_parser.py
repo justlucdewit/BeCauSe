@@ -8,16 +8,27 @@ arg_parser = argparse.ArgumentParser(
 
 # List the possible program arguments
 arg_parser.add_argument(
-    '-v', '--version', help='Show the version of this BCS installation', action='store_true')
+    '-v', '--version',
+    help='Show the version of this BCS installation',
+    action='store_true')
 
 arg_parser.add_argument(
-    '-d', '--debug', help='Prevent deletion of output .asm file', action='store_true')
+    '-d',
+    '--debug',
+    help='Prevent deletion of output .asm file',
+    action='store_true')
 
 arg_parser.add_argument(
-    '-r', '--run', help='Run the produced executable after compilation', action='store_true')
+    '-r',
+    '--run',
+    help='Run the produced executable after compilation',
+    action='store_true')
 
 arg_parser.add_argument(
-    '-i', '--interpret', help='Interpret the program instead of compiling it', action='store_true')
+    '-i',
+    '--interpret',
+    help='Interpret the program instead of compiling it',
+    action='store_true')
 
 arg_parser.add_argument(
     'filename',

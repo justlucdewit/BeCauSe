@@ -14,7 +14,12 @@ from modules.opcodes import (MEMORY_CAPACITY, OP_2DUP, OP_ADD, OP_BITWISE_AND,
 
 
 def compile_program_linux_x86_64(program, out_file_path, debug):
-    output_asm_name = "output.asm" if out_file_path is None else out_file_path + ".asm"
+    output_asm_name = None
+
+    if out_file_path is None:
+        output_asm_name = "output.asm"
+    else:
+        output_asm_name = out_file_path + ".asm"
 
     with open(output_asm_name, "w+") as output:
         # text segment
@@ -307,12 +312,14 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
         [
             "ld",
             "-o",
-            args.output if args.output is not None else "output",
-            args.output + '.o' if args.output is not None else 'output.o'
+            out_file_path if out_file_path is not None else "output",
+            out_file_path + '.o' if out_file_path is not None else 'output.o'
         ])
 
-    subprocess.call(
-        ["rm", args.output + '.o' if args.output is not None else 'output.o'])
+    subprocess.call([
+        "rm",
+        out_file_path + '.o' if out_file_path is not None else 'output.o'
+    ])
 
-    if not args.debug:
+    if not debug:
         subprocess.call(["rm", output_asm_name])
