@@ -2,9 +2,9 @@
 
 # Import custom modules
 from modules.compile_program import compile_program_linux_x86_64
-from modules.parser import load_program_from_file
+from modules.parser import load_program_from_file, repl
 from modules.run_program import run_program
-from modules.argument_parser import args, arg_parser
+from modules.argument_parser import args
 
 # Version string
 BCS_VERSION = "BCS Compiler/Interpreter V1.0.0"
@@ -22,12 +22,36 @@ if __name__ == "__main__":
 
     # If no arguments were given to the program
     if no_args_given:
-        arg_parser.print_help()
-        exit(0)
+        repl()
 
     # If --version argument was given, print version
     elif args.version:
         print(BCS_VERSION)
+        print("""
+                            # #
+                          # # # #
+                        # # # # # #
+                        # # # # # # #
+                          # # # # # # #
+                            # # # # # # #
+# # # # # # # # # # # # # # # # # # # # # #
+  # # # # # # # # # # # # # # # # # # # # # #
+    # # # # # # # # # # # # # # # # # # # # # #
+                                      # # # # # #
+                                        # # # # # #
+                                          # # # # # #
+                                          # # # # # # #
+                # # # # # # # # # # # # # # # # # # #
+                  # # # # # # # # # # # # # # # # #
+                    # # # # # # # # # # # # # # #
+                                    # # # # # #
+                                  # # # # # #
+                                # # # # # #
+                              # # # # # #
+                              # # # # #
+                                # # #
+                                  #
+        """)
         exit(0)
 
     # If interpretation mode, interpret the program

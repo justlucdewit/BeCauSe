@@ -8,6 +8,7 @@ from modules.opcodes import (OP_2DUP, OP_ADD, OP_BITWISE_AND,
                              OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
                              OP_SYSCALL6, OP_WHILE, TOK_CHAR, TOK_INT,
                              TOK_STRING, TOK_WORD, OP_PUSH)
+from modules.run_program import run_program
 
 from modules.stdlibs import stdlibs
 
@@ -328,12 +329,6 @@ def crossreference_blocks(tokens, file_path):
             program.append(op)
             ip += 1
 
-    # for token in program:
-    #     name = instructions_map[token['type']]
-    #     if 'value' in token:
-    #         name += f" {token['value']}"
-    #     print(name)
-
     return program
 
 
@@ -372,3 +367,34 @@ def lex_text(file_path, text):
 def load_program_from_file(file_path):
     # Parse token as op
     return crossreference_blocks(lex_file(file_path), file_path)
+
+
+def repl():
+    print("BeCauSe REPL")
+
+    while True:
+        code = input(">>> ")
+
+        if code.startswith(":"):
+            tokens = code.split(" ")
+            command = tokens[0]
+
+            if command == ":q":
+                exit(0)
+
+            elif command == ":h":
+                print(
+                    "\n"
+                    "Command\t\tDescription\n"
+                    "----------------------------------------\n"
+                    ":h\t\tPrint this help overview\n"
+                    ":q\t\tExit the REPL\n"
+                )
+
+            else:
+                print("unknown command, try :h\n")
+        else:
+            lex_result = lex_text("repl input", code)
+            program = crossreference_blocks(lex_result, "repl input")
+            run_program(program)
+            print()
