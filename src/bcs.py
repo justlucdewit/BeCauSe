@@ -2,7 +2,8 @@
 
 # Import custom modules
 from modules.compile_program import compile_program_linux_x86_64
-from modules.parser import load_program_from_file, repl
+from modules.parser import load_program_from_file
+from modules.repl import repl
 from modules.run_program import run_program
 from modules.argument_parser import args
 

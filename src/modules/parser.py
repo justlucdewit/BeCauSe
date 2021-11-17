@@ -8,7 +8,6 @@ from modules.opcodes import (OP_2DUP, OP_ADD, OP_BITWISE_AND,
                              OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
                              OP_SYSCALL6, OP_WHILE, TOK_CHAR, TOK_INT,
                              TOK_STRING, TOK_WORD, OP_PUSH)
-from modules.run_program import run_program
 
 from modules.stdlibs import stdlibs
 
@@ -123,11 +122,14 @@ def lex_line(file_path, row, line):
             col = find_col(line, col_end, lambda x: not x.isspace())
 
 
+macros = {}
+imports = []
+
+
 def crossreference_blocks(tokens, file_path):
     reversed_program = list(reversed(tokens))
     stack = []
     ip = 0
-    macros = {}
     program = []
 
     while len(reversed_program) > 0:
@@ -220,6 +222,7 @@ def crossreference_blocks(tokens, file_path):
 
             import_path_token = reversed_program.pop()
             result = None
+            imports.append(import_path_token['value'])
 
             if import_path_token['value'] in stdlibs:
                 result = lex_text(
@@ -290,7 +293,7 @@ def crossreference_blocks(tokens, file_path):
                 macro_name = macro_name_token['value']
                 print(
                     f"{file_path}:{row}:{col}:\n\tMacro '{macro_name}' already"
-                    " exists at {macro_file_path}:{macro_row}:{macro_col}")
+                    f" exists at {macro_file_path}:{macro_row}:{macro_col}")
                 exit(1)
 
             # Make sure no buildins get overridden by macros
@@ -367,34 +370,3 @@ def lex_text(file_path, text):
 def load_program_from_file(file_path):
     # Parse token as op
     return crossreference_blocks(lex_file(file_path), file_path)
-
-
-def repl():
-    print("BeCauSe REPL")
-
-    while True:
-        code = input(">>> ")
-
-        if code.startswith(":"):
-            tokens = code.split(" ")
-            command = tokens[0]
-
-            if command == ":q":
-                exit(0)
-
-            elif command == ":h":
-                print(
-                    "\n"
-                    "Command\t\tDescription\n"
-                    "----------------------------------------\n"
-                    ":h\t\tPrint this help overview\n"
-                    ":q\t\tExit the REPL\n"
-                )
-
-            else:
-                print("unknown command, try :h\n")
-        else:
-            lex_result = lex_text("repl input", code)
-            program = crossreference_blocks(lex_result, "repl input")
-            run_program(program)
-            print()
