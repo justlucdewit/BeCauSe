@@ -1,0 +1,9 @@
+
+memory memcpy_size 8 end
+memory memcpy_src 8 end
+memory memcpy_dst 8 end
+
+macro memcpy // size src dst
+    0 while dup memcpy_size .
+    
+end
