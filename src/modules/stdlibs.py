@@ -1,15 +1,6 @@
 stdlibs = {
-    # ========== STD IO ========== #
-    "std/io": """
-        // io.bcs
-        // Coded by luke_
-        // 11-11-2021
-        //
-        // part of the BeCauSe
-        // standard library
-
-        macro IO_WRITE 1 1 syscall3 end
-        macro IO_READ swap 0 0 syscall3 end
-        macro IO_EXIT 60 syscall1 end
-        """
+    "std/io": open("modules/stdlib/io.bcs").read(),
+    "str/io": open("modules/stdlib/str.bcs").read(),
+    "sys/io": open("modules/stdlib/sys.bcs").read(),
+    "time/io": open("modules/stdlib/time.bcs").read()
 }
