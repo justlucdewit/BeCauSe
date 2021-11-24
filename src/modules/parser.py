@@ -121,6 +121,7 @@ def lex_line(file_path, row, line):
 
 
 macros = {}
+memory_regions = {}
 imports = []
 
 
@@ -214,7 +215,7 @@ def crossreference_blocks(tokens, file_path):
                 print(
                     f"{file_path}:{row}:{col}:\n\tWrong usage of import"
                     "feature\n\timport must be followed by a string containing"
-                    " the path to the file to import\n\tfor Example:\n\n\t"
+                    " the path to the file to import\n\tfor example:\n\n\t"
                     "import \"std/io\"")
                 exit(1)
 
@@ -257,11 +258,50 @@ def crossreference_blocks(tokens, file_path):
                 (file_path, row, col) = op['loc']
                 print(
                     f"{file_path}:{row}:{col}:\n\tWrong usage of memory "
-                    "block feature\n\tblock must be followed by a word "
-                    "that will be used as the reference for the memory "
-                    "block, for example:\n\n\t"
-                    "memory pointer_to_mem 64000 end")
+                    "region feature\n\tmemory keyword must be followed by a "
+                    "word that will be used as the reference to the memory "
+                    "region. \n\tfor example:\n\n\t"
+                    "memory pointer_to_mem\n\t\t64000\n\tend")
                 exit(1)
+
+            # Get the name of the memory region
+            name_of_memory_region = reversed_program.pop()
+
+            end_found = False
+            evaluation_stack = []
+            while len(reversed_program) > 0:
+                t = reversed_program.pop()
+                print(t)
+
+                # TODO: allow macros here
+                if (t['type'] == TokenType.WORD and
+                        BUILDIN_WORDS.get(t['value']) == Keyword.END):
+                    end_found = True
+                    break
+                elif t['type'] == TokenType.INT:
+                    evaluation_stack.append(t['value'])
+                elif (t['type'] == TokenType.WORD and
+                        BUILDIN_WORDS.get(t['value']) == Operation.ADD):
+                    a = evaluation_stack.pop()
+                    b = evaluation_stack.pop()
+                    evaluation_stack.append(a + b)
+                elif (t['type'] == TokenType.WORD and
+                        BUILDIN_WORDS.get(t['value']) == Operation.MULTIPLY):
+                    a = evaluation_stack.pop()
+                    b = evaluation_stack.pop()
+                    evaluation_stack.append(a * b)
+
+            print('---------', evaluation_stack)
+
+            if not end_found:
+                (file_path, row, col) = op['loc']
+                print(
+                    f"{file_path}:{row}:{col}:\n\tFound memory region that was"
+                    " not closed with 'end' keyword")
+                exit(1)
+
+            # TODO get the size from the evualtion stack
+            memory_regions[name_of_memory_region['value']] = 0
 
         elif op['type'] == Keyword.MACRO:
             # Macro must be followed by a name, code and 'end'

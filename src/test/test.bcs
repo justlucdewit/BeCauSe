@@ -4,29 +4,29 @@
 
 import "std/io"
 
-memory memcpy_size 8 end
+memory memcpy_size 4 4 + 2 * end
 memory memcpy_src 8 end
 memory memcpy_dst 8 end
 
-macro memcpy // size src dst
-    // Store all of the arguments into a memory block
-    memcpy_dst !64
-    memcpy_src !64
-    memcpy_size !64
+// macro memcpy // size src dst
+//     // Store all of the arguments into a memory block
+//     memcpy_dst !64
+//     memcpy_src !64
+//     memcpy_size !64
 
-    // Loop over the bytes in the source
-    0 while dup memcpy_size @64 < do
-        // Get the source char
-        dup memcpy_src @64 + @8
+//     // Loop over the bytes in the source
+//     0 while dup memcpy_size @64 < do
+//         // Get the source char
+//         dup memcpy_src @64 + @8
 
-        // Write the char into dst
-        over memcpy_dst @64 + !8
+//         // Write the char into dst
+//         over memcpy_dst @64 + !8
 
-        // Increment for next iteration
-        1 +
-    end
-end
+//         // Increment for next iteration
+//         1 +
+//     end
+// end
 
-memory hello 256 end
+// memory hello 256 end
 
-"Hello world!\n" hello memcpy
+// "Hello world!\n" hello memcpy

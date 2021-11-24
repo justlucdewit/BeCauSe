@@ -1,1 +1,1 @@
-python3 bcs.py run ../test/test.bcs
+python3 bcs.py test/test.bcs -i

@@ -2,7 +2,8 @@
 import subprocess
 
 # Import custom modules
-from modules.opcodes import MEMORY_CAPACITY, instructions_map, Operation, Keyword
+from modules.opcodes import (MEMORY_CAPACITY, instructions_map, Operation,
+                             Keyword)
 
 
 def compile_program_linux_x86_64(program, out_file_path, debug):
