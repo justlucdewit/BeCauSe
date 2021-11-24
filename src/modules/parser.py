@@ -3,11 +3,12 @@ from modules.opcodes import (OP_2DUP, OP_ADD, OP_BITWISE_AND,
                              OP_END, OP_EQUAL, OP_GREATER, OP_IF, OP_IMPORT,
                              OP_LOAD, OP_MACRO, OP_MEM, OP_MULTIPLY, OP_OVER,
                              OP_PRINT, OP_PUSH_STRING, OP_SHIFT_LEFT,
-                             OP_SHIFT_RIGHT, OP_SMALLER, OP_STORE, OP_SUBTRACT,
+                             OP_SHIFT_RIGHT, OP_SMALLER, OP_STORE, OP_STORE8, OP_SUBTRACT,
                              OP_SWAP, OP_SYSCALL0, OP_SYSCALL1, OP_SYSCALL2,
                              OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
                              OP_SYSCALL6, OP_WHILE, TOK_CHAR, TOK_INT,
-                             TOK_STRING, TOK_WORD, OP_PUSH)
+                             TOK_STRING, TOK_WORD, OP_PUSH, OP_LOAD16, OP_LOAD32,
+                             OP_LOAD64, OP_LOAD8, OP_STORE16, OP_STORE32, OP_STORE64)
 
 from modules.stdlibs import stdlibs
 
@@ -37,6 +38,14 @@ BUILDIN_WORDS = {
     'mem': OP_MEM,
     '.': OP_STORE,
     ',': OP_LOAD,
+    '!8': OP_STORE8,
+    '!16': OP_STORE16,
+    '!32': OP_STORE32,
+    '!64': OP_STORE64,
+    '@8': OP_LOAD8,
+    '@16': OP_LOAD16,
+    '@32': OP_LOAD32,
+    '@64': OP_LOAD64,
     'syscall0': OP_SYSCALL0,
     'syscall1': OP_SYSCALL1,
     'syscall2': OP_SYSCALL2,

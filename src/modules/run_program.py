@@ -6,7 +6,9 @@ from modules.opcodes import (MEMORY_CAPACITY, OP_2DUP, OP_ADD, OP_BITWISE_AND,
                              OP_SMALLER, OP_STORE, OP_SUBTRACT, OP_SWAP,
                              OP_SYSCALL0, OP_SYSCALL1, OP_SYSCALL2,
                              OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
-                             OP_SYSCALL6, OP_WHILE, STRING_CAPACITY, OP_PUSH)
+                             OP_SYSCALL6, OP_WHILE, STRING_CAPACITY, OP_PUSH,
+                             OP_STORE64, OP_STORE32, OP_LOAD16, OP_LOAD32,
+                             OP_LOAD64, OP_LOAD8, OP_STORE16, OP_STORE8)
 
 debug = False
 stack = []
@@ -138,15 +140,61 @@ def run_program(program):
         elif operation['type'] == OP_MEM:
             stack.append(STRING_CAPACITY)
 
-        elif operation['type'] == OP_LOAD:
-            ptr = stack.pop()
-            byte = memory[ptr] % 0xFF
+        elif operation['type'] == OP_LOAD8:
+            address = stack.pop()
+            byte = memory[address] % 0xFF
             stack.append(byte)
 
-        elif operation['type'] == OP_STORE:
-            byte = stack.pop()
-            ptr = stack.pop()
-            memory[ptr] = byte & 0xFF
+        elif operation['type'] == OP_LOAD16:
+            address = stack.pop()
+            value = int.from_bytes(
+                memory[address:address+2],
+                byteorder="little")
+            stack.append(value)
+
+        elif operation['type'] == OP_LOAD32:
+            address = stack.pop()
+            value = int.from_bytes(
+                memory[address:address+4],
+                byteorder="little")
+            stack.append(value)
+
+        elif operation['type'] == OP_LOAD64:
+            address = stack.pop()
+            value = int.from_bytes(
+                memory[address:address+8],
+                byteorder="little")
+            stack.append(value)
+
+        elif operation['type'] == OP_STORE8:
+            address = stack.pop()
+            value = stack.pop()
+            memory[address] = value & 0xFF
+
+        elif operation['type'] == OP_STORE16:
+            address = stack.pop()
+            value = stack.pop()
+            memory[address:address + 2] = value.to_bytes(
+                length=2,
+                byteorder="little",
+                signed=(value < 0))
+
+        elif operation['type'] == OP_STORE32:
+            address = stack.pop()
+            value = stack.pop()
+            memory[address:address + 4] = value.to_bytes(
+                length=4,
+                byteorder="little",
+                signed=(value < 0))
+
+        elif operation['type'] == OP_STORE64:
+            address = stack.pop()
+            value = stack.pop()
+            memory[address:address + 8] = value.to_bytes(
+                length=8,
+                byteorder="little",
+                signed=(value < 0))
+            print(memory[address])
 
         elif operation['type'] == OP_SYSCALL0:
             syscall_num = stack.pop()
