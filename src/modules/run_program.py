@@ -1,14 +1,4 @@
-from modules.opcodes import (MEMORY_CAPACITY, OP_2DUP, OP_ADD, OP_BITWISE_AND,
-                             OP_BITWISE_OR, OP_DO, OP_DROP, OP_DUP, OP_ELSE,
-                             OP_END, OP_EQUAL, OP_GREATER, OP_IF, OP_LOAD,
-                             OP_MEM, OP_MULTIPLY, OP_OVER, OP_PRINT,
-                             OP_PUSH_STRING, OP_SHIFT_LEFT, OP_SHIFT_RIGHT,
-                             OP_SMALLER, OP_STORE, OP_SUBTRACT, OP_SWAP,
-                             OP_SYSCALL0, OP_SYSCALL1, OP_SYSCALL2,
-                             OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
-                             OP_SYSCALL6, OP_WHILE, STRING_CAPACITY, OP_PUSH,
-                             OP_STORE64, OP_STORE32, OP_LOAD16, OP_LOAD32,
-                             OP_LOAD64, OP_LOAD8, OP_STORE16, OP_STORE8)
+from modules.opcodes import MEMORY_CAPACITY, STRING_CAPACITY, Operation, Keyword
 
 debug = False
 stack = []
@@ -22,10 +12,10 @@ def run_program(program):
     while ip < len(program):
         operation = program[ip]
 
-        if operation['type'] == OP_PUSH:
+        if operation['type'] == Operation.PUSH:
             stack.append(operation['value'])
 
-        elif operation['type'] == OP_PUSH_STRING:
+        elif operation['type'] == Operation.PUSH_STRING:
             bs = bytes(operation['value'], 'utf-8')
             n = len(bs)
             stack.append(n)
@@ -37,12 +27,12 @@ def run_program(program):
 
             stack.append(operation['addr'])
 
-        elif operation['type'] == OP_DUP:
+        elif operation['type'] == Operation.DUP:
             a = stack.pop()
             stack.append(a)
             stack.append(a)
 
-        elif operation['type'] == OP_2DUP:
+        elif operation['type'] == Operation.TWODUP:
             b = stack.pop()
             a = stack.pop()
             stack.append(a)
@@ -50,128 +40,128 @@ def run_program(program):
             stack.append(a)
             stack.append(b)
 
-        elif operation['type'] == OP_DROP:
+        elif operation['type'] == Operation.DROP:
             stack.pop()
 
-        elif operation['type'] == OP_SWAP:
+        elif operation['type'] == Operation.SWAP:
             a = stack.pop()
             b = stack.pop()
             stack.append(a)
             stack.append(b)
 
-        elif operation['type'] == OP_OVER:
+        elif operation['type'] == Operation.OVER:
             a = stack.pop()
             b = stack.pop()
             stack.append(b)
             stack.append(a)
             stack.append(b)
 
-        elif operation['type'] == OP_ADD:
+        elif operation['type'] == Operation.ADD:
             stack.append(stack.pop() + stack.pop())
 
-        elif operation['type'] == OP_SUBTRACT:
+        elif operation['type'] == Operation.SUBTRACT:
             a = stack.pop()
             b = stack.pop()
             stack.append(b - a)
 
-        elif operation['type'] == OP_MULTIPLY:
+        elif operation['type'] == Operation.MULTIPLY:
             a = stack.pop()
             b = stack.pop()
             stack.append(b * a)
 
-        elif operation['type'] == OP_SHIFT_LEFT:
+        elif operation['type'] == Operation.SHIFT_LEFT:
             a = stack.pop()
             b = stack.pop()
             stack.append(int(b << a))
 
-        elif operation['type'] == OP_SHIFT_RIGHT:
+        elif operation['type'] == Operation.SHIFT_RIGHT:
             a = stack.pop()
             b = stack.pop()
             stack.append(int(b >> a))
 
-        elif operation['type'] == OP_BITWISE_AND:
+        elif operation['type'] == Operation.BITWISE_AND:
             a = stack.pop()
             b = stack.pop()
             stack.append(int(b & a))
 
-        elif operation['type'] == OP_BITWISE_OR:
+        elif operation['type'] == Operation.BITWISE_OR:
             a = stack.pop()
             b = stack.pop()
             stack.append(int(b | a))
 
-        elif operation['type'] == OP_PRINT:
+        elif operation['type'] == Operation.PRINT:
             print(stack.pop())
 
-        elif operation['type'] == OP_GREATER:
+        elif operation['type'] == Operation.GREATER:
             a = stack.pop()
             b = stack.pop()
             stack.append(int(b > a))
 
-        elif operation['type'] == OP_SMALLER:
+        elif operation['type'] == Operation.SMALLER:
             a = stack.pop()
             b = stack.pop()
             stack.append(int(b < a))
 
-        elif operation['type'] == OP_EQUAL:
+        elif operation['type'] == Operation.EQUAL:
             a = stack.pop()
             b = stack.pop()
             stack.append(int(a == b))
 
-        elif operation['type'] == OP_IF:
+        elif operation['type'] == Keyword.IF:
             a = stack.pop()
             if a == 0:
                 ip = operation['reference'] - 1
 
-        elif operation['type'] == OP_ELSE:
+        elif operation['type'] == Keyword.ELSE:
             ip = operation['reference'] - 1
 
-        elif operation['type'] == OP_END:
+        elif operation['type'] == Keyword.END:
             ip = operation['reference'] - 1
 
-        elif operation['type'] == OP_WHILE:
+        elif operation['type'] == Keyword.WHILE:
             pass
 
-        elif operation['type'] == OP_DO:
+        elif operation['type'] == Keyword.DO:
             a = stack.pop()
 
             if a == 0:
                 ip = operation['reference'] - 1
 
-        elif operation['type'] == OP_MEM:
+        elif operation['type'] == Operation.MEM:
             stack.append(STRING_CAPACITY)
 
-        elif operation['type'] == OP_LOAD8:
+        elif operation['type'] == Operation.LOAD8:
             address = stack.pop()
             byte = memory[address] % 0xFF
             stack.append(byte)
 
-        elif operation['type'] == OP_LOAD16:
+        elif operation['type'] == Operation.LOAD16:
             address = stack.pop()
             value = int.from_bytes(
                 memory[address:address+2],
                 byteorder="little")
             stack.append(value)
 
-        elif operation['type'] == OP_LOAD32:
+        elif operation['type'] == Operation.LOAD32:
             address = stack.pop()
             value = int.from_bytes(
                 memory[address:address+4],
                 byteorder="little")
             stack.append(value)
 
-        elif operation['type'] == OP_LOAD64:
+        elif operation['type'] == Operation.LOAD64:
             address = stack.pop()
             value = int.from_bytes(
                 memory[address:address+8],
                 byteorder="little")
             stack.append(value)
 
-        elif operation['type'] == OP_STORE8:
+        elif operation['type'] == Operation.STORE8:
             address = stack.pop()
             value = stack.pop()
             memory[address] = value & 0xFF
 
-        elif operation['type'] == OP_STORE16:
+        elif operation['type'] == Operation.STORE16:
             address = stack.pop()
             value = stack.pop()
             memory[address:address + 2] = value.to_bytes(
@@ -179,7 +169,7 @@ def run_program(program):
                 byteorder="little",
                 signed=(value < 0))
 
-        elif operation['type'] == OP_STORE32:
+        elif operation['type'] == Operation.STORE32:
             address = stack.pop()
             value = stack.pop()
             memory[address:address + 4] = value.to_bytes(
@@ -187,7 +177,7 @@ def run_program(program):
                 byteorder="little",
                 signed=(value < 0))
 
-        elif operation['type'] == OP_STORE64:
+        elif operation['type'] == Operation.STORE64:
             address = stack.pop()
             value = stack.pop()
             memory[address:address + 8] = value.to_bytes(
@@ -196,33 +186,33 @@ def run_program(program):
                 signed=(value < 0))
             print(memory[address])
 
-        elif operation['type'] == OP_SYSCALL0:
+        elif operation['type'] == Operation.SYSCALL0:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [])
 
-        elif operation['type'] == OP_SYSCALL1:
+        elif operation['type'] == Operation.SYSCALL1:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [stack.pop()])
 
-        elif operation['type'] == OP_SYSCALL2:
+        elif operation['type'] == Operation.SYSCALL2:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [stack.pop(), stack.pop()])
 
-        elif operation['type'] == OP_SYSCALL3:
+        elif operation['type'] == Operation.SYSCALL3:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [stack.pop(), stack.pop(), stack.pop()])
 
-        elif operation['type'] == OP_SYSCALL4:
+        elif operation['type'] == Operation.SYSCALL4:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [stack.pop(),
                                        stack.pop(), stack.pop(), stack.pop()])
 
-        elif operation['type'] == OP_SYSCALL5:
+        elif operation['type'] == Operation.SYSCALL5:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [stack.pop(), stack.pop(
             ), stack.pop(), stack.pop(), stack.pop()])
 
-        elif operation['type'] == OP_SYSCALL6:
+        elif operation['type'] == Operation.SYSCALL6:
             syscall_num = stack.pop()
             emulate_unix(syscall_num, [stack.pop(), stack.pop(
             ), stack.pop(), stack.pop(), stack.pop(), stack.pop()])

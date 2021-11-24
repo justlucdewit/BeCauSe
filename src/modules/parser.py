@@ -1,59 +1,47 @@
-from modules.opcodes import (OP_2DUP, OP_ADD, OP_BITWISE_AND,
-                             OP_BITWISE_OR, OP_DO, OP_DROP, OP_DUP, OP_ELSE,
-                             OP_END, OP_EQUAL, OP_GREATER, OP_IF, OP_IMPORT,
-                             OP_LOAD, OP_MACRO, OP_MEM, OP_MULTIPLY, OP_OVER,
-                             OP_PRINT, OP_PUSH_STRING, OP_SHIFT_LEFT,
-                             OP_SHIFT_RIGHT, OP_SMALLER, OP_STORE, OP_STORE8, OP_SUBTRACT,
-                             OP_SWAP, OP_SYSCALL0, OP_SYSCALL1, OP_SYSCALL2,
-                             OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
-                             OP_SYSCALL6, OP_WHILE, TOK_CHAR, TOK_INT,
-                             TOK_STRING, TOK_WORD, OP_PUSH, OP_LOAD16, OP_LOAD32,
-                             OP_LOAD64, OP_LOAD8, OP_STORE16, OP_STORE32, OP_STORE64)
+from modules.opcodes import Operation, Keyword, TokenType
 
 from modules.stdlibs import stdlibs
 
 BUILDIN_WORDS = {
-    '>': OP_GREATER,
-    '<': OP_SMALLER,
-    '+': OP_ADD,
-    '*': OP_MULTIPLY,
-    '-': OP_SUBTRACT,
-    '>>': OP_SHIFT_RIGHT,
-    '<<': OP_SHIFT_LEFT,
-    '|': OP_BITWISE_OR,
-    '&': OP_BITWISE_AND,
-    'dump': OP_PRINT,
-    '=': OP_EQUAL,
-    'if': OP_IF,
-    'else': OP_ELSE,
-    'macro': OP_MACRO,
-    'end': OP_END,
-    'dup': OP_DUP,
-    '2dup': OP_2DUP,
-    'drop': OP_DROP,
-    'swap': OP_SWAP,
-    'over': OP_OVER,
-    'while': OP_WHILE,
-    'do': OP_DO,
-    'mem': OP_MEM,
-    '.': OP_STORE,
-    ',': OP_LOAD,
-    '!8': OP_STORE8,
-    '!16': OP_STORE16,
-    '!32': OP_STORE32,
-    '!64': OP_STORE64,
-    '@8': OP_LOAD8,
-    '@16': OP_LOAD16,
-    '@32': OP_LOAD32,
-    '@64': OP_LOAD64,
-    'syscall0': OP_SYSCALL0,
-    'syscall1': OP_SYSCALL1,
-    'syscall2': OP_SYSCALL2,
-    'syscall3': OP_SYSCALL3,
-    'syscall4': OP_SYSCALL4,
-    'syscall5': OP_SYSCALL5,
-    'syscall6': OP_SYSCALL6,
-    'import': OP_IMPORT
+    '>': Operation.GREATER,
+    '<': Operation.SMALLER,
+    '+': Operation.ADD,
+    '*': Operation.MULTIPLY,
+    '-': Operation.SUBTRACT,
+    '>>': Operation.SHIFT_RIGHT,
+    '<<': Operation.SHIFT_LEFT,
+    '|': Operation.BITWISE_OR,
+    '&': Operation.BITWISE_AND,
+    'dump': Operation.PRINT,
+    '=': Operation.EQUAL,
+    'if': Keyword.IF,
+    'else': Keyword.ELSE,
+    'macro': Keyword.MACRO,
+    'end': Keyword.END,
+    'dup': Operation.DUP,
+    '2dup': Operation.TWODUP,
+    'drop': Operation.DROP,
+    'swap': Operation.SWAP,
+    'over': Operation.OVER,
+    'while': Keyword.WHILE,
+    'do': Keyword.DO,
+    'mem': Operation.MEM,
+    '!8': Operation.STORE8,
+    '!16': Operation.STORE16,
+    '!32': Operation.STORE32,
+    '!64': Operation.STORE64,
+    '@8': Operation.LOAD8,
+    '@16': Operation.LOAD16,
+    '@32': Operation.LOAD32,
+    '@64': Operation.LOAD64,
+    'syscall0': Operation.SYSCALL0,
+    'syscall1': Operation.SYSCALL1,
+    'syscall2': Operation.SYSCALL2,
+    'syscall3': Operation.SYSCALL3,
+    'syscall4': Operation.SYSCALL4,
+    'syscall5': Operation.SYSCALL5,
+    'syscall6': Operation.SYSCALL6,
+    'import': Keyword.IMPORT
 }
 
 
@@ -77,9 +65,9 @@ def chop_word(line, col):
 
 def lex_word(token_as_text):
     try:
-        return (TOK_INT, int(token_as_text))
+        return (TokenType.INT, int(token_as_text))
     except ValueError:
-        return (TOK_WORD, token_as_text)
+        return (TokenType.WORD, token_as_text)
 
 
 def lex_line(file_path, row, line):
@@ -98,7 +86,7 @@ def lex_line(file_path, row, line):
             text_of_token = bytes(
                 line[col + 1:col_end], 'utf-8').decode("unicode_escape")
 
-            yield (col, (TOK_STRING, text_of_token))
+            yield (col, (TokenType.STRING, text_of_token))
             col = find_col(line, col_end + 1, lambda x: not x.isspace())
         elif line[col] == '\'':
             col_end = find_col(line, col + 1, lambda x: x == '\'')
@@ -123,7 +111,7 @@ def lex_line(file_path, row, line):
                     "found no character inside, use string instead")
                 exit(1)
 
-            yield (col, (TOK_CHAR, text_of_token))
+            yield (col, (TokenType.CHAR, text_of_token))
             col = find_col(line, col_end + 1, lambda x: not x.isspace())
         else:
             col_end = find_col(line, col, lambda x: x.isspace())
@@ -144,16 +132,16 @@ def crossreference_blocks(tokens, file_path):
     while len(reversed_program) > 0:
         token = reversed_program.pop()
         op = None
-        if token['type'] == TOK_INT:
-            op = {'type': OP_PUSH, 'value': int(
+        if token['type'] == TokenType.INT:
+            op = {'type': Operation.PUSH, 'value': int(
                 token['value']), 'loc': token['loc']}
-        elif token['type'] == TOK_STRING:
-            op = {'type': OP_PUSH_STRING,
+        elif token['type'] == TokenType.STRING:
+            op = {'type': Operation.PUSH_STRING,
                   'value': token['value'], 'loc': token['loc']}
-        elif token['type'] == TOK_CHAR:
-            op = {'type': OP_PUSH,
+        elif token['type'] == TokenType.CHAR:
+            op = {'type': Operation.PUSH,
                   'value': ord(token['value']), 'loc': token['loc']}
-        elif token['type'] == TOK_WORD:
+        elif token['type'] == TokenType.WORD:
             if token['value'] in BUILDIN_WORDS:
                 op = {
                     'type': BUILDIN_WORDS[token['value']], 'loc': token['loc']}
@@ -166,16 +154,16 @@ def crossreference_blocks(tokens, file_path):
                 print(f"{file_path}:{row}:{col}:\n\tUnexpected word '{word}'")
                 exit(1)
 
-        if op['type'] == OP_IF:
+        if op['type'] == Keyword.IF:
             program.append(op)
             stack.append(ip)
             ip += 1
 
-        elif op['type'] == OP_ELSE:
+        elif op['type'] == Keyword.ELSE:
             program.append(op)
             if_ip = stack.pop()
 
-            if program[if_ip]['type'] != OP_IF:
+            if program[if_ip]['type'] != Keyword.IF:
                 print("Parse Error: else can only be used with 'if' blocks")
                 exit(1)
 
@@ -183,16 +171,16 @@ def crossreference_blocks(tokens, file_path):
             stack.append(ip)
             ip += 1
 
-        elif op['type'] == OP_END:
+        elif op['type'] == Keyword.END:
             program.append(op)
             block_ip = stack.pop()
 
-            if (program[block_ip]['type'] == OP_IF or
-                    program[block_ip]['type'] == OP_ELSE):
+            if (program[block_ip]['type'] == Keyword.IF or
+                    program[block_ip]['type'] == Keyword.ELSE):
                 program[block_ip]['reference'] = ip
                 program[ip]['reference'] = ip + 1
 
-            elif program[block_ip]['type'] == OP_DO:
+            elif program[block_ip]['type'] == Keyword.DO:
                 program[ip]['reference'] = program[block_ip]['reference']
                 program[block_ip]['reference'] = ip + 1
 
@@ -203,23 +191,23 @@ def crossreference_blocks(tokens, file_path):
                 exit(1)
             ip += 1
 
-        elif op['type'] == OP_WHILE:
+        elif op['type'] == Keyword.WHILE:
             program.append(op)
             stack.append(ip)
             ip += 1
 
-        elif op['type'] == OP_DO:
+        elif op['type'] == Keyword.DO:
             program.append(op)
             while_ip = stack.pop()
             program[ip]['reference'] = while_ip
             stack.append(ip)
             ip += 1
 
-        elif op['type'] == OP_IMPORT:
+        elif op['type'] == Keyword.IMPORT:
             # Import must be followed by a string containing the file
             if (len(reversed_program) == 0 or
                     reversed_program[len(reversed_program) - 1]
-                    ['type'] != TOK_STRING):
+                    ['type'] != TokenType.STRING):
 
                 (file_path, row, col) = op['loc']
                 print(
@@ -259,7 +247,7 @@ def crossreference_blocks(tokens, file_path):
 
             reversed_program += reversed(result)
 
-        elif op['type'] == OP_MACRO:
+        elif op['type'] == Keyword.MACRO:
             # Macro must be followed by a name, code and 'end'
             if len(reversed_program) == 0:
                 (file_path, row, col) = op['loc']
@@ -275,16 +263,16 @@ def crossreference_blocks(tokens, file_path):
             # Get the token name
             macro_name_token = reversed_program.pop()
 
-            if macro_name_token['type'] != TOK_WORD:
+            if macro_name_token['type'] != TokenType.WORD:
                 (file_path, row, col) = macro_name_token['loc']
                 macro_name = macro_name_token['value']
                 tokentype_str = "unknown"
 
-                if macro_name_token['type'] == TOK_STRING:
+                if macro_name_token['type'] == TokenType.STRING:
                     tokentype_str = "string"
-                elif macro_name_token['type'] == TOK_INT:
+                elif macro_name_token['type'] == TokenType.INT:
                     tokentype_str = "integer"
-                elif macro_name_token['type'] == TOK_CHAR:
+                elif macro_name_token['type'] == TokenType.CHAR:
                     tokentype_str = "character"
 
                 print(
@@ -324,12 +312,12 @@ def crossreference_blocks(tokens, file_path):
             while len(reversed_program) > 0:
                 token = reversed_program.pop()
 
-                if token['type'] == TOK_WORD and token['value'] == 'end':
+                if token['type'] == TokenType.WORD and token['value'] == 'end':
                     break
                 else:
                     macro['tokens'].append(token)
 
-            if token['type'] != TOK_WORD or token['value'] != 'end':
+            if token['type'] != TokenType.WORD or token['value'] != 'end':
                 (file_path, row, col) = token['loc']
                 print(
                     f"{file_path}:{row}:{col}:\n\tMacros must end with 'end' "

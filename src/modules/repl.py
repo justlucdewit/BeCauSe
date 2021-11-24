@@ -45,6 +45,10 @@ def repl():
 
                 if n is not None:
                     stack_segment = list(reversed(stack))[:n]
+
+                    if len(stack_segment) == 0:
+                        print("No items on stack")
+
                     for i, n in enumerate(stack_segment):
                         print(f"top - {i} \t\t {n}")
                     print()

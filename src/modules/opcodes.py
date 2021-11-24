@@ -18,66 +18,62 @@ def register_operation(name, reset=False):
     return result
 
 
-# Stack
-OP_PUSH = register_operation("PUSH", True)
-OP_PUSH_STRING = register_operation("PUSH")
-OP_DUP = register_operation("DUP")
-OP_2DUP = register_operation("2DUP")
-OP_DROP = register_operation("DROP")
-OP_SWAP = register_operation("SWAP")
-OP_OVER = register_operation("OVER")
+class Operation:
+    # Stack
+    PUSH = register_operation("PUSH", True)
+    PUSH_STRING = register_operation("PUSH")
+    DUP = register_operation("DUP")
+    TWODUP = register_operation("2DUP")
+    DROP = register_operation("DROP")
+    SWAP = register_operation("SWAP")
+    OVER = register_operation("OVER")
 
-# Math
-OP_ADD = register_operation("ADD")
-OP_SUBTRACT = register_operation("SUBTRACT")
-OP_MULTIPLY = register_operation("MULTIPLY")
-OP_GREATER = register_operation("GREATER")
-OP_SMALLER = register_operation("SMALLER")
-OP_EQUAL = register_operation("EQUAL")
-OP_SHIFT_LEFT = register_operation("BITWISE LEFTSHIFT")
-OP_SHIFT_RIGHT = register_operation("BITWISE RIGHTSHIFT")
-OP_BITWISE_AND = register_operation("BITWISE AND")
-OP_BITWISE_OR = register_operation("BITWISE OR")
+    # Math
+    ADD = register_operation("ADD")
+    SUBTRACT = register_operation("SUBTRACT")
+    MULTIPLY = register_operation("MULTIPLY")
+    GREATER = register_operation("GREATER")
+    SMALLER = register_operation("SMALLER")
+    EQUAL = register_operation("EQUAL")
+    SHIFT_LEFT = register_operation("BITWISE LEFTSHIFT")
+    SHIFT_RIGHT = register_operation("BITWISE RIGHTSHIFT")
+    BITWISE_AND = register_operation("BITWISE AND")
+    BITWISE_OR = register_operation("BITWISE OR")
+    PRINT = register_operation("PRINT")
+    SYSCALL0 = register_operation("SYSCALL0")
+    SYSCALL1 = register_operation("SYSCALL1")
+    SYSCALL2 = register_operation("SYSCALL2")
+    SYSCALL3 = register_operation("SYSCALL3")
+    SYSCALL4 = register_operation("SYSCALL4")
+    SYSCALL5 = register_operation("SYSCALL5")
+    SYSCALL6 = register_operation("SYSCALL6")
+    MEM = register_operation("MEM")
+    STORE8 = register_operation("STORE8")
+    STORE16 = register_operation("STORE16")
+    STORE32 = register_operation("STORE32")
+    STORE64 = register_operation("STORE64")
+    LOAD8 = register_operation("LOAD8")
+    LOAD16 = register_operation("LOAD16")
+    LOAD32 = register_operation("LOAD32")
+    LOAD64 = register_operation("LOAD64")
 
-# Flow control
-OP_IF = register_operation("IF")
-OP_END = register_operation("END")
-OP_ELSE = register_operation("ELSE")
-OP_WHILE = register_operation("WHILE")
-OP_DO = register_operation("DO")
-OP_MACRO = register_operation("MACRO")
 
-# IO
-OP_PRINT = register_operation("PRINT")
-OP_SYSCALL0 = register_operation("SYSCALL0")
-OP_SYSCALL1 = register_operation("SYSCALL1")
-OP_SYSCALL2 = register_operation("SYSCALL2")
-OP_SYSCALL3 = register_operation("SYSCALL3")
-OP_SYSCALL4 = register_operation("SYSCALL4")
-OP_SYSCALL5 = register_operation("SYSCALL5")
-OP_SYSCALL6 = register_operation("SYSCALL6")
+class Keyword:
+    IF = register_operation("IF")
+    END = register_operation("END")
+    ELSE = register_operation("ELSE")
+    WHILE = register_operation("WHILE")
+    DO = register_operation("DO")
+    MACRO = register_operation("MACRO")
+    IMPORT = register_operation("IMPORT")
 
-# Memory
-OP_MEM = register_operation("MEM")
-OP_STORE = register_operation("STORE")
-OP_LOAD = register_operation("LOAD")
-OP_STORE8 = register_operation("STORE8")
-OP_STORE16 = register_operation("STORE16")
-OP_STORE32 = register_operation("STORE32")
-OP_STORE64 = register_operation("STORE64")
-OP_LOAD8 = register_operation("LOAD8")
-OP_LOAD16 = register_operation("LOAD16")
-OP_LOAD32 = register_operation("LOAD32")
-OP_LOAD64 = register_operation("LOAD64")
 
-# Other
-OP_IMPORT = register_operation("IMPORT")
+class TokenType:
+    INT = register_operation("INT")
+    WORD = register_operation("WORD")
+    STRING = register_operation("STRING")
+    CHAR = register_operation("CHARACTER")
 
-# Token types
-TOK_INT = register_operation("INT")
-TOK_WORD = register_operation("WORD")
-TOK_STRING = register_operation("STRING")
-TOK_CHAR = register_operation("CHARACTER")
 
 # Non opcodes
 NUMBER_OF_OPS = register_operation("NUM_OPS")
