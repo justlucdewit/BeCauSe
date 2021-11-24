@@ -66,6 +66,7 @@ class Keyword:
     DO = register_operation("DO")
     MACRO = register_operation("MACRO")
     IMPORT = register_operation("IMPORT")
+    MEMORY = register_operation("MEMORY")
 
 
 class TokenType:

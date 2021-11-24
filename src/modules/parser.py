@@ -41,7 +41,8 @@ BUILDIN_WORDS = {
     'syscall4': Operation.SYSCALL4,
     'syscall5': Operation.SYSCALL5,
     'syscall6': Operation.SYSCALL6,
-    'import': Keyword.IMPORT
+    'import': Keyword.IMPORT,
+    'memory': Keyword.MEMORY
 }
 
 
@@ -246,6 +247,21 @@ def crossreference_blocks(tokens, file_path):
                     exit(1)
 
             reversed_program += reversed(result)
+
+        elif op['type'] == Keyword.MEMORY:
+            # Import must be followed by a string containing the file
+            if (len(reversed_program) == 0 or
+                    reversed_program[len(reversed_program) - 1]
+                    ['type'] != TokenType.WORD):
+
+                (file_path, row, col) = op['loc']
+                print(
+                    f"{file_path}:{row}:{col}:\n\tWrong usage of memory "
+                    "block feature\n\tblock must be followed by a word "
+                    "that will be used as the reference for the memory "
+                    "block, for example:\n\n\t"
+                    "memory pointer_to_mem 64000 end")
+                exit(1)
 
         elif op['type'] == Keyword.MACRO:
             # Macro must be followed by a name, code and 'end'
