@@ -4,13 +4,15 @@ import subprocess
 # Import custom modules
 from modules.opcodes import (MEMORY_CAPACITY, OP_2DUP, OP_ADD, OP_BITWISE_AND,
                              OP_BITWISE_OR, OP_DO, OP_DROP, OP_DUP, OP_ELSE,
-                             OP_END, OP_EQUAL, OP_GREATER, OP_IF, OP_LOAD,
+                             OP_END, OP_EQUAL, OP_GREATER, OP_IF, OP_LOAD8,
+                             OP_LOAD16, OP_LOAD32, OP_LOAD64,
                              OP_MEM, OP_MULTIPLY, OP_OVER, OP_PRINT,
                              OP_PUSH_STRING, OP_SHIFT_LEFT, OP_SHIFT_RIGHT,
-                             OP_SMALLER, OP_STORE, OP_SUBTRACT, OP_SWAP,
-                             OP_SYSCALL0, OP_SYSCALL1, OP_SYSCALL2,
-                             OP_SYSCALL3, OP_SYSCALL4, OP_SYSCALL5,
-                             OP_SYSCALL6, OP_WHILE, instructions_map, OP_PUSH)
+                             OP_SMALLER, OP_STORE8,  OP_STORE16, OP_STORE32,
+                             OP_STORE64, OP_SUBTRACT, OP_SWAP, OP_SYSCALL0,
+                             OP_SYSCALL1, OP_SYSCALL2, OP_SYSCALL3, OP_SYSCALL4,
+                             OP_SYSCALL5, OP_SYSCALL6, OP_WHILE, instructions_map,
+                             OP_PUSH)
 
 
 def compile_program_linux_x86_64(program, out_file_path, debug):
@@ -218,21 +220,54 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
             elif opcode['type'] == OP_DO:
                 output.write("    pop rax\n")
                 output.write("    test rax, rax\n")
-                output.write("    jz addr_{opcode['reference']}\n\n")
+                output.write(f"    jz addr_{opcode['reference']}\n\n")
 
             elif opcode['type'] == OP_MEM:
                 output.write("    push mem\n\n")
 
-            elif opcode['type'] == OP_LOAD:
+            elif opcode['type'] == OP_LOAD8:
                 output.write("    pop rax\n")
                 output.write("    xor rbx, rbx\n")
                 output.write("    mov bl, [rax]\n")
                 output.write("    push rbx\n\n")
 
-            elif opcode['type'] == OP_STORE:
+            elif opcode['type'] == OP_LOAD16:
+                output.write("    pop rax\n")
+                output.write("    xor rbx, rbx\n")
+                output.write("    mov bx, [rax]\n")
+                output.write("    push rbx\n\n")
+
+            elif opcode['type'] == OP_LOAD32:
+                output.write("    pop rax\n")
+                output.write("    xor rbx, rbx\n")
+                output.write("    mov ebx, [rax]\n")
+                output.write("    push rbx\n\n")
+
+            elif opcode['type'] == OP_LOAD64:
+                output.write("    pop rax\n")
+                output.write("    xor rbx, rbx\n")
+                output.write("    mov rbx, [rax]\n")
+                output.write("    push rbx\n\n")
+
+            elif opcode['type'] == OP_STORE8:
                 output.write("    pop rax\n")
                 output.write("    pop rbx\n")
-                output.write("    mov [rbx], al\n\n")
+                output.write("    mov [rax], bl\n\n")
+
+            elif opcode['type'] == OP_STORE16:
+                output.write("    pop rax\n")
+                output.write("    pop rbx\n")
+                output.write("    mov [rax], bx\n\n")
+
+            elif opcode['type'] == OP_STORE32:
+                output.write("    pop rax\n")
+                output.write("    pop rbx\n")
+                output.write("    mov [rax], ebx\n\n")
+
+            elif opcode['type'] == OP_STORE64:
+                output.write("    pop rax\n")
+                output.write("    pop rbx\n")
+                output.write("    mov [rax], rbx\n\n")
 
             elif opcode['type'] == OP_SYSCALL0:
                 output.write("    pop rax\n")

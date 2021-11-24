@@ -3,7 +3,7 @@
 // 26-10-2021
 
 // Write the number 69 into memory address 5
-mem 5 + 69 .
+69 mem 5 + !8
 
 // Read from memory address 5 and dump that
-mem 5 + , dump
+mem 5 + @8 dump

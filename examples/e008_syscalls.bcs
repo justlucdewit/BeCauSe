@@ -3,19 +3,19 @@
 // 31-10-2021
 
 // Put "Hello world!" into memory at memory address 0
-mem 0 + 72 .
-mem 1 + 101 .
-mem 2 + 108 .
-mem 3 + 108 .
-mem 4 + 111 .
-mem 5 + 32 .
-mem 6 + 119 .
-mem 7 + 111 .
-mem 8 + 114 .
-mem 9 + 108 .
-mem 10 + 100 .
-mem 11 + 33 .
-mem 12 + 10 .
+72  mem 0  + !8
+101 mem 1  + !8
+108 mem 2  + !8
+108 mem 3  + !8
+111 mem 4  + !8
+32  mem 5  + !8
+119 mem 6  + !8
+111 mem 7  + !8
+114 mem 8  + !8
+108 mem 9  + !8
+100 mem 10 + !8
+33  mem 11 + !8
+10  mem 12 + !8
 
 // Print a string of length 3 that starts at memory address 0 using syscall
 13 mem 1 1 syscall3
