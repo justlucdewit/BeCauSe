@@ -2,5 +2,17 @@
     {
         "test": "t001",
         "expected": "69420\n"
+    },
+    {
+        "test": "t002",
+        "expected": "11666\n"
+    },
+    {
+        "test": "t003",
+        "expected": "110\n"
+    },
+    {
+        "test": "t004",
+        "expected": "50\n50\n50\n"
     }
 ]

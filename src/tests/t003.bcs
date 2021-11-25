@@ -1,0 +1,5 @@
+69 9999 + 1 > if
+    110 dump
+else
+    222 dump
+end
