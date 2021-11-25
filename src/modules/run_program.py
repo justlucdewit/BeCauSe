@@ -62,7 +62,10 @@ def run_program(program):
         elif operation['type'] == Operation.SUBTRACT:
             a = stack.pop()
             b = stack.pop()
-            stack.append(b - a)
+            res = b - a
+            if res < 0:
+                res = 0xFFFFFFFFFFFFFFFF + res + 1
+            stack.append(res)
 
         elif operation['type'] == Operation.MULTIPLY:
             a = stack.pop()
