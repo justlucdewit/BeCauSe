@@ -50,5 +50,13 @@
     {
         "test": "t013",
         "expected": ""
+    },
+    {
+        "test": "t014",
+        "expected": "Hello world!"
+    },
+    {
+        "test": "t015",
+        "expected": "0\n1\n"
     }
 ]

@@ -1,13 +1,14 @@
 import json
 import subprocess
+import datetime
 import sys
 
-print("pi = python interpretation mode")
-print("pc = python compilation mode\n")
+print("PI = python interpretation mode")
+print("PC = python compilation mode\n")
 
-print("┌────┬────┬──────────────────┐")
-print("│ pi │ pc │ test             │")
-print("├────┼────┼──────────────────┤")
+print("┌────┬─────────┬────┬─────────┬──────────────────┐")
+print("│ PI │ PI perf │ PC │ PC perf │ test             │")
+print("├────┼─────────┼────┼─────────┼──────────────────┤")
 
 tests = json.loads(open("./tests/_tests.json").read())
 
@@ -21,15 +22,23 @@ for test in tests:
     expected_result = test['expected']
 
     pi_results = ""
+    pi_unix_start = 0
+    pi_unix_end = 0
     pc_results = ""
+    pc_unix_start = 0
+    pc_unix_end = 0
     compilation_succeeded = True
     interpretation_succeeded = True
 
     if test_pi:
+        pi_unix_start = datetime.datetime.now().timestamp()
+
         # Interpret the script
         result = subprocess.run(
             ['python3', 'bcs.py', f'./tests/{testname}.bcs', '-i'],
             capture_output=True)
+
+        pi_unix_end = datetime.datetime.now().timestamp()
 
         # See if it was successfull
         interpretation_succeeded = result.stdout.decode(
@@ -41,7 +50,8 @@ for test in tests:
         # Print the PI result
         print(
             f"│ {'🟢' if interpretation_succeeded else '🔴'} "
-            f"{' ' if interpretation_succeeded else ''}", end='')
+            f"{' ' if interpretation_succeeded else ''}", end=''
+            f"│ {pi_unix_end - pi_unix_start:.3f}s  ")
     else:
         print("│ ❔ ", end='')
 
@@ -52,8 +62,12 @@ for test in tests:
                 f'./tests/{testname}.bcs', '-o',  f'./tests/{testname}'],
             capture_output=True)
 
+        pc_unix_start = datetime.datetime.now().timestamp()
+
         # Run the compiled file
         result = subprocess.run([f'./tests/{testname}'], capture_output=True)
+
+        pc_unix_end = datetime.datetime.now().timestamp()
 
         # Save the results
         pc_results = result.stdout.decode('utf-8').replace('\r', '')
@@ -65,9 +79,11 @@ for test in tests:
         compilation_succeeded = result.stdout.decode(
             'utf-8').replace('\r', '') == expected_result
 
+        # Print the pc result
         print(
             f"│ {'🟢' if compilation_succeeded else '🔴'} "
-            f"{' ' if compilation_succeeded else ''}", end='')
+            f"{' ' if compilation_succeeded else ''}", end=''
+            f"│ {pc_unix_end - pc_unix_start:.3f}s  ")
 
     else:
         print("│ ❔ ", end='')
@@ -88,7 +104,7 @@ for test in tests:
         buffer += '\t' + expected_result.replace('\n', '\n\t') + '\n'
         failed_tests.append(buffer)
 
-print("└────┴────┴──────────────────┘\n\n\n")
+print("└────┴─────────┴────┴─────────┴──────────────────┘\n\n\n")
 
 for failed_test in failed_tests:
     print(failed_test)
