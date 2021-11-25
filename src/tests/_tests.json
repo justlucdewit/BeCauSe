@@ -30,5 +30,25 @@
     {
         "test": "t008",
         "expected": "351\n18446744073709551265\n"
+    },
+    {
+        "test": "t009",
+        "expected": "131072\n64\n"
+    },
+    {
+        "test": "t010",
+        "expected": "2\n16\n"
+    },
+    {
+        "test": "t011",
+        "expected": "255\n"
+    },
+    {
+        "test": "t012",
+        "expected": "205\n"
+    },
+    {
+        "test": "t013",
+        "expected": ""
     }
 ]
