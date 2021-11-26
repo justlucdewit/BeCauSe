@@ -118,7 +118,15 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    pop rbx\n")
                 output.write("    push rbx\n")
                 output.write("    push rax\n")
+                output.write("    push rbx\n\n")
+
+            elif opcode['rot'] == Operation.ROT:
+                output.write("    pop rax\n")
+                output.write("    pop rbx\n")
+                output.write("    pop rcx\n")
                 output.write("    push rbx\n")
+                output.write("    push rax\n")
+                output.write("    push rcx\n\n")
 
             elif opcode['type'] == Operation.ADD:
                 output.write("    pop rax\n")

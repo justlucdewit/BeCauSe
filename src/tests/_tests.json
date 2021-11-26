@@ -113,5 +113,10 @@
         "test": "t023",
         "expected": "69\n167\n",
         "description": "memory writing"
+    },
+    {
+        "test": "t024",
+        "expected": "1\n3\n2\n",
+        "description": "stack rotate"
     }
 ]

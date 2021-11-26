@@ -56,6 +56,14 @@ def run_program(program):
             stack.append(a)
             stack.append(b)
 
+        elif operation['type'] == Operation.ROT:
+            a = stack.pop()
+            b = stack.pop()
+            c = stack.pop()
+            stack.append(b)
+            stack.append(a)
+            stack.append(c)
+
         elif operation['type'] == Operation.ADD:
             stack.append(stack.pop() + stack.pop())
 

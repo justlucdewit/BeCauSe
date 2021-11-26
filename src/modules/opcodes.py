@@ -27,6 +27,7 @@ class Operation:
     DROP = register_operation("DROP")
     SWAP = register_operation("SWAP")
     OVER = register_operation("OVER")
+    ROT = register_operation("ROT")
 
     # Math
     ADD = register_operation("ADD")

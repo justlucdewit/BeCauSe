@@ -23,6 +23,7 @@ BUILDIN_WORDS = {
     'drop': Operation.DROP,
     'swap': Operation.SWAP,
     'over': Operation.OVER,
+    'rot': Operation.ROT,
     'while': Keyword.WHILE,
     'do': Keyword.DO,
     'mem': Operation.MEM,
