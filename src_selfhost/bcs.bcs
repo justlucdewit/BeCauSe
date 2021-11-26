@@ -1,0 +1,38 @@
+// Self hosted bcs compiler
+
+// List of build in words
+macro OP_PUSH_INT    0 end
+macro OP_ADD         1 end
+macro OP_DUMP        2 end
+
+// struct Operation {
+//     type: u64
+//     operand: u64
+// }
+
+macro sizeof(OP) 16 end
+
+// Operation[]
+macro OPS_COUNT mem end
+macro OPS OPS_COUNT 8 + end
+
+// type operand
+// type operand *OPS_COUNT
+macro PUSH_OP
+    OPS_COUNT @64 sizeof(OP) * ops +
+end
+
+// fill up the program with
+// hard coded operations
+OP_PUSH_INT 5 PUSH_OP
+OP_PUSH_INT 6 PUSH_OP
+OP_ADD      0 PUSH_OP
+OP_DUMP     0 PUSH_OP
+
+macro COMPILED_PROGRAM
+    // Uninplemented
+end
+
+macro SIMULATE_PROGRAM
+    // Uninplemented
+end
