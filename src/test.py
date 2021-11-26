@@ -3,8 +3,14 @@ import subprocess
 import datetime
 import sys
 
-print("PI = python interpretation mode")
-print("PC = python compilation mode\n")
+test_pi = 'pi' in sys.argv
+test_pc = 'pc' in sys.argv
+
+if test_pi:
+    print("PI = python interpretation mode")
+
+if test_pc:
+    print("PC = python compilation mode\n")
 
 tests = json.loads(open("./tests/_tests.json").read())
 
@@ -12,17 +18,15 @@ max_desc_length = max(
     max(list(map(lambda x: len(x['description']), tests))), 13)
 
 print(
-    f"┌────┬─────────┬────┬─────────┬──────────────────┬{'─' * (max_desc_length + 2)}┐")
+    f"┌{'────┬─────────┬' if test_pi else ''}{'────┬─────────┬' if test_pc else ''}──────────────────┬{'─' * (max_desc_length + 2)}┐")
 print(
-    f"│ PI │ PI perf │ PC │ PC perf │ test             │ description {' ' * (max_desc_length - 11)}│")
+    f"│{' PI │ PI perf │' if test_pi else ''}{' PC │ PC perf │' if test_pc else ''} test             │ description {' ' * (max_desc_length - 11)}│")
 print(
-    f"├────┼─────────┼────┼─────────┼──────────────────┼{'─' * (max_desc_length + 2)}┤")
-
-test_pi = 'pi' in sys.argv
-test_pc = 'pc' in sys.argv
+    f"├{'────┼─────────┼' if test_pi else ''}{'────┼─────────┼' if test_pc else ''}──────────────────┼{'─' * (max_desc_length + 2)}┤")
 
 failed_tests = []
 
+python_executable = "python3" if sys.platform == "linux" else "python"
 
 for test in tests:
     testname = test['test']
@@ -43,7 +47,7 @@ for test in tests:
 
         # Interpret the script
         result = subprocess.run(
-            ['python', 'bcs.py', f'./tests/{testname}.bcs', '-i'],
+            [python_executable, 'bcs.py', f'./tests/{testname}.bcs', '-i'],
             capture_output=True)
 
         pi_unix_end = datetime.datetime.now().timestamp()
@@ -57,16 +61,13 @@ for test in tests:
 
         # Print the PI result
         print(
-            f"│ {'🟢' if interpretation_succeeded else '🔴'} "
-            f"{'' if interpretation_succeeded else ''}", end=''
-            f"│ {pi_unix_end - pi_unix_start:.3f}s  ")
-    else:
-        print("│ ❔ │         ", end='')
+            f"│ {'  ' if interpretation_succeeded else 'X '} "
+            f"│ {pi_unix_end - pi_unix_start:.3f}s  ", end='')
 
     if test_pc:
         # Compile the script
         subprocess.run(
-            ['python', 'bcs.py',
+            [python_executable, 'bcs.py',
                 f'./tests/{testname}.bcs', '-o',  f'./tests/{testname}'],
             capture_output=True)
 
@@ -89,12 +90,8 @@ for test in tests:
 
         # Print the pc result
         print(
-            f"│ {'🟢' if compilation_succeeded else '🔴'} "
-            f"{' ' if compilation_succeeded else ''}", end=''
-            f"│ {pc_unix_end - pc_unix_start:.3f}s  ")
-
-    else:
-        print("│ ❔ |         ", end='')
+            f"│ {'  ' if compilation_succeeded else 'X '} "
+            f"│ {pc_unix_end - pc_unix_start:.3f}s  ", end='')
 
     print(
         f'│ ./tests/{testname}.bcs │ {description}{" " * (max_desc_length - len(description))} │')
@@ -114,7 +111,7 @@ for test in tests:
         failed_tests.append(buffer)
 
 print(
-    f"└────┴─────────┴────┴─────────┴──────────────────┘{'─' * (max_desc_length + 2)}┘\n\n\n")
+    f"└{'────┴─────────┴' if test_pi else ''}{'────┴─────────┴' if test_pc else ''}──────────────────┴{'─' * (max_desc_length + 2)}┘\n\n\n")
 
 for failed_test in failed_tests:
     print(failed_test)
