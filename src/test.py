@@ -6,16 +6,22 @@ import sys
 print("PI = python interpretation mode")
 print("PC = python compilation mode\n")
 
-print("┌────┬─────────┬────┬─────────┬──────────────────┐")
-print("│ PI │ PI perf │ PC │ PC perf │ test             │")
-print("├────┼─────────┼────┼─────────┼──────────────────┤")
-
 tests = json.loads(open("./tests/_tests.json").read())
+
+max_desc_length = max(
+    max(list(map(lambda x: len(x['description']), tests))), 13)
+
+print(
+    f"┌────┬─────────┬────┬─────────┬──────────────────┬{'─' * max_desc_length}┐")
+print("│ PI │ PI perf │ PC │ PC perf │ test             │ description │")
+print(
+    f"├────┼─────────┼────┼─────────┼──────────────────┼{'─' * max_desc_length}┤")
 
 test_pi = 'pi' in sys.argv
 test_pc = 'pc' in sys.argv
 
 failed_tests = []
+
 
 for test in tests:
     testname = test['test']
