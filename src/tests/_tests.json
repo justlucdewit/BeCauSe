@@ -2,76 +2,76 @@
     {
         "test": "t001",
         "expected": "69420\n",
-        "description": "testerrrrr"
+        "description": "number push"
     },
     {
         "test": "t002",
         "expected": "11666\n",
-        "description": "ttt"
+        "description": "addition"
     },
     {
         "test": "t003",
         "expected": "110\n",
-        "description": "ttt"
+        "description": "if statement"
     },
     {
         "test": "t004",
         "expected": "50\n50\n50\n",
-        "description": "ttt"
+        "description": "duping"
     },
     {
         "test": "t005",
         "expected": "0\n1\n",
-        "description": "ttt"
+        "description": "greater then"
     },
     {
         "test": "t006",
         "expected": "1\n0\n",
-        "description": "ttt"
+        "description": "smaller then"
     },
     {
         "test": "t007",
         "expected": "28980\n",
-        "description": "ttt"
+        "description": "multiplication"
     },
     {
         "test": "t008",
         "expected": "351\n18446744073709551265\n",
-        "description": "ttt"
+        "description": "subtraction"
     },
     {
         "test": "t009",
         "expected": "131072\n64\n",
-        "description": "ttt"
+        "description": "bitshift left"
     },
     {
         "test": "t010",
         "expected": "2\n16\n",
-        "description": "ttt"
+        "description": "bitshift right"
     },
     {
         "test": "t011",
         "expected": "255\n",
-        "description": "ttt"
+        "description": "bitwise or"
     },
     {
         "test": "t012",
         "expected": "205\n",
-        "description": "ttt"
+        "description": "bitwise and"
     },
     {
         "test": "t013",
         "expected": "",
-        "description": "ttt"
+        "description": "importing"
     },
     {
         "test": "t014",
         "expected": "Hello world!",
-        "description": "ttt"
+        "description": "hello world"
     },
     {
         "test": "t015",
         "expected": "0\n1\n",
-        "description": "ttt"
+        "description": "equals"
     }
 ]

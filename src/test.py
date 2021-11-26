@@ -12,10 +12,11 @@ max_desc_length = max(
     max(list(map(lambda x: len(x['description']), tests))), 13)
 
 print(
-    f"┌────┬─────────┬────┬─────────┬──────────────────┬{'─' * max_desc_length}┐")
-print("│ PI │ PI perf │ PC │ PC perf │ test             │ description │")
+    f"┌────┬─────────┬────┬─────────┬──────────────────┬{'─' * (max_desc_length + 2)}┐")
 print(
-    f"├────┼─────────┼────┼─────────┼──────────────────┼{'─' * max_desc_length}┤")
+    f"│ PI │ PI perf │ PC │ PC perf │ test             │ description {' ' * (max_desc_length - 11)}│")
+print(
+    f"├────┼─────────┼────┼─────────┼──────────────────┼{'─' * (max_desc_length + 2)}┤")
 
 test_pi = 'pi' in sys.argv
 test_pc = 'pc' in sys.argv
@@ -25,6 +26,7 @@ failed_tests = []
 
 for test in tests:
     testname = test['test']
+    description = test['description']
     expected_result = test['expected']
 
     pi_results = ""
@@ -41,7 +43,7 @@ for test in tests:
 
         # Interpret the script
         result = subprocess.run(
-            ['python3', 'bcs.py', f'./tests/{testname}.bcs', '-i'],
+            ['python', 'bcs.py', f'./tests/{testname}.bcs', '-i'],
             capture_output=True)
 
         pi_unix_end = datetime.datetime.now().timestamp()
@@ -56,15 +58,15 @@ for test in tests:
         # Print the PI result
         print(
             f"│ {'🟢' if interpretation_succeeded else '🔴'} "
-            f"{' ' if interpretation_succeeded else ''}", end=''
+            f"{'' if interpretation_succeeded else ''}", end=''
             f"│ {pi_unix_end - pi_unix_start:.3f}s  ")
     else:
-        print("│ ❔ ", end='')
+        print("│ ❔ │         ", end='')
 
     if test_pc:
         # Compile the script
         subprocess.run(
-            ['python3', 'bcs.py',
+            ['python', 'bcs.py',
                 f'./tests/{testname}.bcs', '-o',  f'./tests/{testname}'],
             capture_output=True)
 
@@ -92,9 +94,10 @@ for test in tests:
             f"│ {pc_unix_end - pc_unix_start:.3f}s  ")
 
     else:
-        print("│ ❔ ", end='')
+        print("│ ❔ |         ", end='')
 
-    print(f'│ ./tests/{testname}.bcs │')
+    print(
+        f'│ ./tests/{testname}.bcs │ {description}{" " * (max_desc_length - len(description))} │')
 
     buffer = f'error in ./tests/{testname}.bcs:\n'
     if not interpretation_succeeded:
@@ -110,7 +113,8 @@ for test in tests:
         buffer += '\t' + expected_result.replace('\n', '\n\t') + '\n'
         failed_tests.append(buffer)
 
-print("└────┴─────────┴────┴─────────┴──────────────────┘\n\n\n")
+print(
+    f"└────┴─────────┴────┴─────────┴──────────────────┘{'─' * (max_desc_length + 2)}┘\n\n\n")
 
 for failed_test in failed_tests:
     print(failed_test)
