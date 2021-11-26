@@ -1,0 +1,13 @@
+import "std/io"
+
+15 75 + 1 > if
+    "yep " IO_WRITE
+else
+    "nope " IO_WRITE
+end
+
+15 75 + 1 < if
+    "yep\n" IO_WRITE
+else
+    "nope\n" IO_WRITE
+end

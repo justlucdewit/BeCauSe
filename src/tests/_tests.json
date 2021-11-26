@@ -73,5 +73,45 @@
         "test": "t015",
         "expected": "0\n1\n",
         "description": "equals"
+    },
+    {
+        "test": "t016",
+        "expected": "yep nope\n",
+        "description": "if else"
+    },
+    {
+        "test": "t017",
+        "expected": "25\n",
+        "description": "macros"
+    },
+    {
+        "test": "t018",
+        "expected": "22\n",
+        "description": "2dup"
+    },
+    {
+        "test": "t019",
+        "expected": "5\n",
+        "description": "drop"
+    },
+    {
+        "test": "t020",
+        "expected": "6\n7\n5\n",
+        "description": "swap"
+    },
+    {
+        "test": "t021",
+        "expected": "5\n6\n5\n",
+        "description": "over"
+    },
+    {
+        "test": "t022",
+        "expected": "0\n1\n2\n3\n4\n5\n6\n7\n8\n9\n",
+        "description": "while"
+    },
+    {
+        "test": "t023",
+        "expected": "69\n167\n",
+        "description": "memory writing"
     }
 ]

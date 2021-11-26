@@ -1,0 +1,3 @@
+macro number 5 end
+
+number number * dump

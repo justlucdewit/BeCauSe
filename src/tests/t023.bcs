@@ -1,0 +1,7 @@
+69 mem 0 + !8
+
+987654567 mem 1 + !32
+
+mem @8 dump
+
+mem 1 + @8 dump
