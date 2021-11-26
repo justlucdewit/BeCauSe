@@ -120,7 +120,7 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    push rax\n")
                 output.write("    push rbx\n\n")
 
-            elif opcode['rot'] == Operation.ROT:
+            elif opcode['type'] == Operation.ROT:
                 output.write("    pop rax\n")
                 output.write("    pop rbx\n")
                 output.write("    pop rcx\n")
