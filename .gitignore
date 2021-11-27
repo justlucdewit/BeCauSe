@@ -3,3 +3,5 @@ output*
 __pycache__
 *.bat
 logo.png
+.vscode
+.psc-ide-port
