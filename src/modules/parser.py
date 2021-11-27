@@ -19,9 +19,9 @@ BUILDIN_WORDS = {
     'macro': Keyword.MACRO,
     'end': Keyword.END,
     'dup': Operation.DUP,
-    '2dup': Operation.TWODUP,
+    '2dup': Operation.TWO_DUP,
     'drop': Operation.DROP,
-    '2drop' : Operation.TWODROP,
+    '2drop': Operation.TWO_DROP,
     'swap': Operation.SWAP,
     'over': Operation.OVER,
     'rot': Operation.ROT,
@@ -137,13 +137,13 @@ def crossreference_blocks(tokens, file_path):
         token = reversed_program.pop()
         op = None
         if token['type'] == TokenType.INT:
-            op = {'type': Operation.PUSH, 'value': int(
+            op = {'type': Operation.PUSH_INT, 'value': int(
                 token['value']), 'loc': token['loc']}
         elif token['type'] == TokenType.STRING:
             op = {'type': Operation.PUSH_STRING,
                   'value': token['value'], 'loc': token['loc']}
         elif token['type'] == TokenType.CHAR:
-            op = {'type': Operation.PUSH,
+            op = {'type': Operation.PUSH_INT,
                   'value': ord(token['value']), 'loc': token['loc']}
         elif token['type'] == TokenType.WORD:
             if token['value'] in BUILDIN_WORDS:

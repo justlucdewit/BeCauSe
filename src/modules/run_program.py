@@ -1,4 +1,5 @@
-from modules.opcodes import MEMORY_CAPACITY, STRING_CAPACITY, Operation, Keyword
+from modules.opcodes import MEMORY_CAPACITY, STRING_CAPACITY
+from modules.opcodes import Operation, Keyword
 
 debug = False
 stack = []
@@ -12,7 +13,7 @@ def run_program(program):
     while ip < len(program):
         operation = program[ip]
 
-        if operation['type'] == Operation.PUSH:
+        if operation['type'] == Operation.PUSH_INT:
             stack.append(operation['value'])
 
         elif operation['type'] == Operation.PUSH_STRING:
@@ -32,7 +33,7 @@ def run_program(program):
             stack.append(a)
             stack.append(a)
 
-        elif operation['type'] == Operation.TWODUP:
+        elif operation['type'] == Operation.TWO_DUP:
             b = stack.pop()
             a = stack.pop()
             stack.append(a)
@@ -43,10 +44,10 @@ def run_program(program):
         elif operation['type'] == Operation.DROP:
             stack.pop()
 
-        elif operation['type'] == Operation.TWODROP:
+        elif operation['type'] == Operation.TWO_DROP:
             stack.pop()
             stack.pop()
-            
+
         elif operation['type'] == Operation.SWAP:
             a = stack.pop()
             b = stack.pop()
