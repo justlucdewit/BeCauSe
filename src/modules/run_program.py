@@ -43,6 +43,10 @@ def run_program(program):
         elif operation['type'] == Operation.DROP:
             stack.pop()
 
+        elif operation['type'] == Operation.TWODROP:
+            stack.pop()
+            stack.pop()
+            
         elif operation['type'] == Operation.SWAP:
             a = stack.pop()
             b = stack.pop()

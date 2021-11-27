@@ -106,6 +106,10 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
 
             elif opcode['type'] == Operation.DROP:
                 output.write("    pop rax\n\n")
+            
+            elif opcode['type'] == Operation.TWODROP:
+                output.write("    pop rax\n")
+                output.write("    pop rax\n\n")
 
             elif opcode['type'] == Operation.SWAP:
                 output.write("    pop rax\n")
