@@ -118,5 +118,10 @@
         "test": "t024",
         "expected": "1\n3\n2\n",
         "description": "stack rotate"
+    },
+    {
+        "test": "t025",
+        "expected": "12\n",
+        "description": "2drop"
     }
 ]

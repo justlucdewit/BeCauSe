@@ -25,10 +25,11 @@ class Operation:
     DUP = register_operation("DUP")
     TWODUP = register_operation("2DUP")
     DROP = register_operation("DROP")
+    TWODROP = register_operation("2DROP")
     SWAP = register_operation("SWAP")
     OVER = register_operation("OVER")
     ROT = register_operation("ROT")
-
+    
     # Math
     ADD = register_operation("ADD")
     SUBTRACT = register_operation("SUBTRACT")

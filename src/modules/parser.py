@@ -21,6 +21,7 @@ BUILDIN_WORDS = {
     'dup': Operation.DUP,
     '2dup': Operation.TWODUP,
     'drop': Operation.DROP,
+    '2drop' : Operation.TWODROP,
     'swap': Operation.SWAP,
     'over': Operation.OVER,
     'rot': Operation.ROT,
