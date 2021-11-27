@@ -6,6 +6,9 @@ from modules.parser import load_program_from_file
 from modules.repl import repl
 from modules.run_program import run_program
 from modules.argument_parser import args
+from datetime import datetime
+
+start_timestamp = datetime.now().timestamp()
 
 # Version string
 BCS_VERSION = "BCS Compiler/Interpreter V1.0.0"
@@ -60,6 +63,13 @@ if __name__ == "__main__":
         program = load_program_from_file(args.filename)
         run_program(program)
 
+        if args.time:
+            interpretation_end = datetime.now().timestamp()
+            interpretation_took = interpretation_end - start_timestamp
+            print(
+                '\ninterpretation finished, took'
+                f' {interpretation_took:.3f}sec\n')
+
     # If compilation mode, compile the program
     else:
         if args.filename == '':
@@ -68,3 +78,10 @@ if __name__ == "__main__":
 
         program = load_program_from_file(args.filename)
         compile_program_linux_x86_64(program, args.output, args.debug)
+
+        if args.time:
+            compilation_end = datetime.now().timestamp()
+            compilation_took = compilation_end - start_timestamp
+            print(
+                'compilation finished, took'
+                f' {compilation_took:.3f}sec\n')

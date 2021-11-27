@@ -42,5 +42,10 @@ arg_parser.add_argument(
     metavar='<file>',
     help="Directs the output to a name of your choice")
 
+arg_parser.add_argument(
+    '-t', '--time',
+    help='Time how long compilation/interpretation took',
+    action='store_true')
+
 # Actually parse the arguments
 args = arg_parser.parse_args(sys.argv[1:])
