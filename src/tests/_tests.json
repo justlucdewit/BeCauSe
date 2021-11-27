@@ -123,5 +123,10 @@
         "test": "t025",
         "expected": "12\n",
         "description": "2drop"
+    },
+    {
+        "test": "t026",
+        "expected": "6\n5\n4\n3\n2\n1\n",
+        "description": "while in macro"
     }
 ]
