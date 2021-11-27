@@ -20,16 +20,16 @@ def register_operation(name, reset=False):
 
 class Operation:
     # Stack
-    PUSH = register_operation("PUSH", True)
+    PUSH_INT = register_operation("PUSH", True)
     PUSH_STRING = register_operation("PUSH")
     DUP = register_operation("DUP")
-    TWODUP = register_operation("2DUP")
+    TWO_DUP = register_operation("2DUP")
     DROP = register_operation("DROP")
-    TWODROP = register_operation("2DROP")
+    TWO_DROP = register_operation("2DROP")
     SWAP = register_operation("SWAP")
     OVER = register_operation("OVER")
     ROT = register_operation("ROT")
-    
+
     # Math
     ADD = register_operation("ADD")
     SUBTRACT = register_operation("SUBTRACT")

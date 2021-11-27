@@ -80,7 +80,7 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 f"addr_{ip}: ; ({instructions_map[opcode['type']]}" +
                 f"{instruction_value})\n")
 
-            if opcode['type'] == Operation.PUSH:
+            if opcode['type'] == Operation.PUSH_INT:
                 output.write(f"    push {opcode['value']}\n\n")
 
             elif opcode['type'] == Operation.PUSH_STRING:
@@ -96,7 +96,7 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    push rax\n")
                 output.write("    push rax\n\n")
 
-            elif opcode['type'] == Operation.TWODUP:
+            elif opcode['type'] == Operation.TWO_DUP:
                 output.write("    pop rax\n")
                 output.write("    pop rbx\n")
                 output.write("    push rbx\n")
@@ -106,8 +106,8 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
 
             elif opcode['type'] == Operation.DROP:
                 output.write("    pop rax\n\n")
-            
-            elif opcode['type'] == Operation.TWODROP:
+
+            elif opcode['type'] == Operation.TWO_DROP:
                 output.write("    pop rax\n")
                 output.write("    pop rax\n\n")
 
