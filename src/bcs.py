@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
 # Import custom modules
+from sys import stdin, stdout
 from modules.compile_program import compile_program_linux_x86_64
 from modules.parser import load_program_from_file
 from modules.repl import repl
 from modules.run_program import run_program
 from modules.argument_parser import args
 from datetime import datetime
+import subprocess
+from os import stat
+from time import sleep
 
 start_timestamp = datetime.now().timestamp()
 
@@ -60,9 +64,23 @@ if __name__ == "__main__":
 
     # If interpretation mode, interpret the program
     elif args.interpret:
-        program = load_program_from_file(args.filename)
-        run_program(program)
+        # program = load_program_from_file(args.filename)
+        if args.watch:
+            file_changes = False
+            exit_program = False
+            last_changes = stat(args.filename).st_mtime
+            while(exit_program is False):
+                program = load_program_from_file(args.filename)
+                process = subprocess.Popen(run_program(program))
+                file_changes = False
 
+                while(file_changes is False and exit_program is False):
+                    #sleep(5)
+                    print("aa")
+                    if(last_changes != stat(args.filename).st_mtime):
+                        file_changes = True
+                        
+                        last_changes = stat(args.filename).st_mtime
         if args.time:
             interpretation_end = datetime.now().timestamp()
             interpretation_took = interpretation_end - start_timestamp

@@ -47,5 +47,10 @@ arg_parser.add_argument(
     help='Time how long compilation/interpretation took',
     action='store_true')
 
+arg_parser.add_argument(
+    '-w', '--watch',
+    help='Watch for file changes and recompile/reinterpret after changes',
+    action='store_true')
+    
 # Actually parse the arguments
 args = arg_parser.parse_args(sys.argv[1:])
