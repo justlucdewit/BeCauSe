@@ -91,7 +91,6 @@ for test in tests:
             pc_unix_start = datetime.datetime.now().timestamp()
 
             # Run the compiled file
-            print(f'./tests/{testname}')
             result = subprocess.run([f'./tests/{testname}'], capture_output=True)
 
             pc_unix_end = datetime.datetime.now().timestamp()
