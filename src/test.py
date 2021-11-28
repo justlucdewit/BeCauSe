@@ -62,11 +62,12 @@ for test in tests:
             # Save the results
             pi_results = result.stdout.decode('utf-8').replace('\r', '')
 
-        except FileNotFoundError:
-            pi_errors.append("Couldn't compile to assembly")
+        except FileNotFoundError as e:
+            pc_errors.append("File not found:"+e.filename)
             interpretation_succeeded = False
             pi_unix_end = 0
             pi_unix_start = 0
+
         except Exception as e:
             pi_errors.append("Unhandled exception")
             pi_errors.append(e)
@@ -90,6 +91,7 @@ for test in tests:
             pc_unix_start = datetime.datetime.now().timestamp()
 
             # Run the compiled file
+            print(f'./tests/{testname}')
             result = subprocess.run([f'./tests/{testname}'], capture_output=True)
 
             pc_unix_end = datetime.datetime.now().timestamp()
@@ -104,15 +106,15 @@ for test in tests:
             compilation_succeeded = result.stdout.decode(
                 'utf-8').replace('\r', '') == expected_result
 
-        except FileNotFoundError:
-            pc_errors.append("Couldn't compile to assembly")
+        except FileNotFoundError as e:
+            pc_errors.append("File not found:" + e.filename)
             compilation_succeeded = False
             pc_unix_end = 0
             pc_unix_start = 0
+
         except Exception as e:
             pc_errors.append("Unhandled exception")
             pc_errors.append(e)
-
         # Print the pc result
 
         print(
