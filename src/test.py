@@ -18,11 +18,19 @@ max_desc_length = max(
     max(list(map(lambda x: len(x['description']), tests))), 13)
 
 print(
-    f"┌{'────┬─────────┬' if test_pi else ''}{'────┬─────────┬' if test_pc else ''}──────────────────┬{'─' * (max_desc_length + 2)}┐")
+    f"┌{'────┬─────────┬' if test_pi else ''}"
+    f"{'────┬─────────┬' if test_pc else ''}"
+    f"──────────────────┬{'─' * (max_desc_length + 2)}┐")
+
 print(
-    f"│{' PI │ PI perf │' if test_pi else ''}{' PC │ PC perf │' if test_pc else ''} test             │ description {' ' * (max_desc_length - 11)}│")
+    f"│{' PI │ PI perf │' if test_pi else ''}"
+    f"{' PC │ PC perf │' if test_pc else ''}"
+    f" test             │ description {' ' * (max_desc_length - 11)}│")
+
 print(
-    f"├{'────┼─────────┼' if test_pi else ''}{'────┼─────────┼' if test_pc else ''}──────────────────┼{'─' * (max_desc_length + 2)}┤")
+    f"├{'────┼─────────┼' if test_pi else ''}"
+    f"{'────┼─────────┼' if test_pc else ''}"
+    f"──────────────────┼{'─' * (max_desc_length + 2)}┤")
 
 failed_tests = []
 
@@ -63,7 +71,7 @@ for test in tests:
             pi_results = result.stdout.decode('utf-8').replace('\r', '')
 
         except FileNotFoundError as e:
-            pi_errors.append("File not found:"+e.filename)
+            pi_errors.append(f"File not found: {e.filename}.bcs")
             interpretation_succeeded = False
             pi_unix_end = 0
             pi_unix_start = 0
@@ -91,7 +99,8 @@ for test in tests:
             pc_unix_start = datetime.datetime.now().timestamp()
 
             # Run the compiled file
-            result = subprocess.run([f'./tests/{testname}'], capture_output=True)
+            result = subprocess.run(
+                [f'./tests/{testname}'], capture_output=True)
 
             pc_unix_end = datetime.datetime.now().timestamp()
 
@@ -106,7 +115,7 @@ for test in tests:
                 'utf-8').replace('\r', '') == expected_result
 
         except FileNotFoundError as e:
-            pc_errors.append("File not found:" + e.filename)
+            pc_errors.append(f"File not found: {e.filename}.bcs")
             compilation_succeeded = False
             pc_unix_end = 0
             pc_unix_start = 0
@@ -124,7 +133,8 @@ for test in tests:
             f"│ {pc_unix_end - pc_unix_start:.3f}s  ", end='')
 
     print(
-        f'│ ./tests/{testname}.bcs │ {description}{" " * (max_desc_length - len(description))} │')
+        f'│ ./tests/{testname}.bcs │ {description}'
+        f'{" " * (max_desc_length - len(description))} │')
 
     buffer = f'error in ./tests/{testname}.bcs:\n'
 
@@ -154,7 +164,9 @@ for test in tests:
         failed_tests.append(buffer)
 
 print(
-    f"└{'────┴─────────┴' if test_pi else ''}{'────┴─────────┴' if test_pc else ''}──────────────────┴{'─' * (max_desc_length + 2)}┘\n\n\n")
+    f"└{'────┴─────────┴' if test_pi else ''}"
+    f"{'────┴─────────┴' if test_pc else ''}"
+    f"──────────────────┴{'─' * (max_desc_length + 2)}┘\n\n\n")
 
 for failed_test in failed_tests:
     print(failed_test)
