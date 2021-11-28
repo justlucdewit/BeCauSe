@@ -5,3 +5,4 @@ __pycache__
 logo.png
 .vscode
 .psc-ide-port
+*.asm
