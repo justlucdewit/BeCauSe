@@ -63,7 +63,7 @@ for test in tests:
             pi_results = result.stdout.decode('utf-8').replace('\r', '')
 
         except FileNotFoundError as e:
-            pc_errors.append("File not found:"+e.filename)
+            pi_errors.append("File not found:"+e.filename)
             interpretation_succeeded = False
             pi_unix_end = 0
             pi_unix_start = 0
@@ -114,6 +114,9 @@ for test in tests:
         except Exception as e:
             pc_errors.append("Unhandled exception")
             pc_errors.append(e)
+            compilation_succeeded = False
+            pc_unix_end = 0
+            pc_unix_start = 0
         # Print the pc result
 
         print(
