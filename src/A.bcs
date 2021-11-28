@@ -1,0 +1,10 @@
+53
+
+// While that number is bigger then 0
+while dup 0 >  do
+    // Decrement it by one
+    1 - 
+
+    // Print it
+    dup dump
+end

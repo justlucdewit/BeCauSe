@@ -344,6 +344,12 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
         output.write("\n\nsegment .bss\n")
         output.write(f"mem: resb {MEMORY_CAPACITY}")
 
+
+def compile_assembly(out_file_path, debug):
+    if out_file_path is None:
+        output_asm_name = "output.asm"
+    else:
+        output_asm_name = out_file_path + ".asm"
     subprocess.call(["nasm", "-felf64", output_asm_name])
 
     subprocess.call(
