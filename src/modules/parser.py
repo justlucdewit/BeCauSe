@@ -135,6 +135,7 @@ def crossreference_blocks(tokens, file_path):
 
     while len(reversed_program) > 0:
         token = reversed_program.pop()
+
         op = None
         if token['type'] == TokenType.INT:
             op = {'type': Operation.PUSH_INT, 'value': int(
@@ -367,11 +368,19 @@ def crossreference_blocks(tokens, file_path):
                 'tokens': []
             }
 
+            indent_level = 0
+
             while len(reversed_program) > 0:
                 token = reversed_program.pop()
 
+                if token['type'] == TokenType.WORD and token['value'] == 'while':
+                    indent_level += 1
+
                 if token['type'] == TokenType.WORD and token['value'] == 'end':
-                    break
+                    if indent_level <= 0:
+                        break
+                    indent_level -= 1
+
                 else:
                     macro['tokens'].append(token)
 
@@ -386,6 +395,9 @@ def crossreference_blocks(tokens, file_path):
         else:
             program.append(op)
             ip += 1
+
+    for i in program:
+        print(i)
 
     return program
 
