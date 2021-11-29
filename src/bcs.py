@@ -3,7 +3,7 @@
 # Import custom modules
 import multiprocessing
 
-from sys import stdout
+import sys
 from modules.compile_program import compile_assembly, compile_program_linux_x86_64
 from modules.parser import load_program_from_file
 from modules.repl import repl
@@ -79,23 +79,24 @@ if __name__ == "__main__":
                 process = multiprocessing.Process(target=run_program,
                                                   args=[program])
                 file_changes = False
+
                 process.start()
-                stdout = open(str(process.pid) + ".out", "w")
+
+                print(process.pid)
+                sys.stdout = open(str(process.pid) + ".out", "w")
 
                 while(file_changes is False and exit_program is False):
-                    sleep(5)
-                    if(process.is_alive() is False):
-                        pid = process.pid
-                        os.close(stdout.fileno())
-                        remove(str(pid) + ".out")
-                        exit_program = True
                     if(last_changes != stat(args.filename).st_mtime):
                         file_changes = True
                         pid = process.pid
                         process.terminate()
-                        os.close(stdout.fileno())
+                        os.close(sys.stdout.fileno())
                         remove(str(pid) + ".out")
                         last_changes = stat(args.filename).st_mtime
+
+        else:
+            program = load_program_from_file(args.filename)
+            run_program(program)
 
         if args.time:
             interpretation_end = datetime.now().timestamp()
@@ -109,9 +110,7 @@ if __name__ == "__main__":
         if args.filename == '':
             print("error: no input file given\n")
             exit(-1)
-        
-        
-        
+
         if args.watch:
             file_changes = False
             exit_program = False
@@ -121,23 +120,24 @@ if __name__ == "__main__":
                 compile_program_linux_x86_64(program, args.output, args.debug)
                 process = multiprocessing.Process(target=compile_assembly,
                                                   args=[args.output, args.debug])
-                stdout = open(str(process.pid) + ".out", "w")
-                
+
+                process.start()
+
+                print(process.pid)
+                sys.stdout = open(str(process.pid) + ".out", "w")
+
                 while(file_changes is False and exit_program is False):
-                    sleep(5)
-                    if(process.is_alive() is False):
-                        pid = process.pid
-                        os.close(stdout.fileno())
-                        remove(str(pid) + ".out")
-                        exit_program = True
                     if(last_changes != stat(args.filename).st_mtime):
                         file_changes = True
                         pid = process.pid
                         process.terminate()
-                        os.close(stdout.fileno())
+                        os.close(sys.stdout.fileno())
                         remove(str(pid) + ".out")
                         last_changes = stat(args.filename).st_mtime
-
+        else:
+            program = load_program_from_file(args.filename)
+            compile_program_linux_x86_64(program, args.output, args.debug)
+            compile_assembly(args.output, args.debug)
         if args.time:
             compilation_end = datetime.now().timestamp()
             compilation_took = compilation_end - start_timestamp
