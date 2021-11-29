@@ -1,4 +1,4 @@
-53
+5
 
 // While that number is bigger then 0
 while dup 0 >  do

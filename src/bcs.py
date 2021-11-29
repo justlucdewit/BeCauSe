@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # Import custom modules
+from io import TextIOWrapper
 import multiprocessing
 
 import sys
@@ -10,13 +11,21 @@ from modules.repl import repl
 from modules.run_program import run_program
 from modules.argument_parser import args
 from datetime import datetime
-import os
+import signal
 
-from os import remove, stat
+from os import error, remove, stat
 from time import sleep
 
 start_timestamp = datetime.now().timestamp()
 
+
+def signal_handler(sig, frame):
+    try:
+        outfile.close()
+        remove(str(pid) + ".out")
+    except Exception as e:
+        print(e)
+    sys.exit(0)
 
 # Version string
 BCS_VERSION = "BCS Compiler/Interpreter V1.0.0"
@@ -31,7 +40,7 @@ no_args_given = (not args.debug and
 
 # Entry point to the program
 if __name__ == "__main__":
-
+    signal.signal(signal.SIGINT, signal_handler)
     # If no arguments were given to the program
     if no_args_given:
         repl()
@@ -70,29 +79,40 @@ if __name__ == "__main__":
     elif args.interpret:
         # program = load_program_from_file(args.filename)
         if args.watch:
-            file_changes = False
+            has_errored = True
             exit_program = False
             last_changes = stat(args.filename).st_mtime
+            
+            outfile = TextIOWrapper
             while(exit_program is False):
-                program = load_program_from_file(args.filename)
-
-                process = multiprocessing.Process(target=run_program,
-                                                  args=[program])
-                file_changes = False
-
-                process.start()
-
-                print(process.pid)
-                sys.stdout = open(str(process.pid) + ".out", "w")
-
-                while(file_changes is False and exit_program is False):
-                    if(last_changes != stat(args.filename).st_mtime):
-                        file_changes = True
-                        pid = process.pid
-                        process.terminate()
-                        os.close(sys.stdout.fileno())
-                        remove(str(pid) + ".out")
+                while(has_errored is True):
+                    try:
+                        program = load_program_from_file(args.filename)
+                        process = multiprocessing.Process(target=run_program,
+                                                          args=[program])
                         last_changes = stat(args.filename).st_mtime
+                        process.start()
+
+                        print(process.pid)
+                        pid = process.pid
+                        outfile = open(str(process.pid) + ".out", "w")
+                        # sys.stdout = outfile
+                    except Exception as e:
+                        print(e)
+                        print(last_changes)
+                        has_errored = True
+                        while(last_changes == stat(args.filename).st_mtime):
+                            sleep(0.1)
+                    has_errored = False
+
+                while(1):
+                    current_changes = stat(args.filename).st_mtime
+                    if(last_changes != current_changes):
+                        process.terminate()
+                        outfile.close()
+                        remove(str(pid) + ".out")
+                        has_errored = True
+                        break
 
         else:
             program = load_program_from_file(args.filename)
@@ -112,28 +132,42 @@ if __name__ == "__main__":
             exit(-1)
 
         if args.watch:
-            file_changes = False
+            has_errored = True
             exit_program = False
             last_changes = stat(args.filename).st_mtime
+            outfile = TextIOWrapper
+
             while(exit_program is False):
-                program = load_program_from_file(args.filename)
-                compile_program_linux_x86_64(program, args.output, args.debug)
-                process = multiprocessing.Process(target=compile_assembly,
-                                                  args=[args.output, args.debug])
-
-                process.start()
-
-                print(process.pid)
-                sys.stdout = open(str(process.pid) + ".out", "w")
-
-                while(file_changes is False and exit_program is False):
-                    if(last_changes != stat(args.filename).st_mtime):
-                        file_changes = True
-                        pid = process.pid
-                        process.terminate()
-                        os.close(sys.stdout.fileno())
-                        remove(str(pid) + ".out")
+                while(has_errored is True):
+                    try:
+                        program = load_program_from_file(args.filename)
+                        compile_program_linux_x86_64(program, args.output, args.debug)
+                        process = multiprocessing.Process(target=compile_assembly,
+                                                          args=[args.output, args.debug])
                         last_changes = stat(args.filename).st_mtime
+                        process.start()
+
+                        print(process.pid)
+                        pid = process.pid
+                        outfile = open(str(process.pid) + ".out", "w")
+                        # sys.stdout = outfile
+                    except Exception as e:
+                        print(e)
+                        print(last_changes)
+                        has_errored = True
+
+                        while(last_changes == stat(args.filename).st_mtime):
+                            sleep(0.1)
+                    has_errored = False
+
+                while(1):
+                    current_changes = stat(args.filename).st_mtime
+                    if(last_changes != current_changes):
+                        process.terminate()
+                        outfile.close()
+                        remove(str(pid) + ".out")
+                        has_errored = True
+                        break
         else:
             program = load_program_from_file(args.filename)
             compile_program_linux_x86_64(program, args.output, args.debug)
