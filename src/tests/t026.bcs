@@ -1,3 +1,6 @@
+import "std/time"
+import "std/io"
+
 macro countdown
     while dup 0 > do
         dup dump
@@ -5,4 +8,5 @@ macro countdown
     end
 end
 
-6 countdown
+10 countdown
+"LIFTOFF!!\n" IO_WRITE 

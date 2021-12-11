@@ -31,25 +31,3 @@ end
 macro IO_EXIT
     60 syscall1
 end
-
-// Usage:
-// <amount of sec> IO_SLEEP_SEC
-//
-// Example:
-// 69 IO_SLEEP_SEC
-macro IO_SLEEP_SEC
-    mem 100 + !32
-    0 mem 108 + !32
-    mem 100 + 0 swap 35 syscall2
-end
-
-// Usage:
-// <amount of ns> IO_SLEEP_NS
-//
-// Example:
-// 500000000 IO_SLEEP_NS
-macro IO_SLEEP_NS
-    0 mem 100 + !32
-    mem 108 + !32
-    mem 100 + 0 swap 35 syscall2
-end

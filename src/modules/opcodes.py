@@ -1,4 +1,5 @@
 instructions_map = {}
+scoped_instructions = []
 
 MEMORY_CAPACITY = 640_000
 STRING_CAPACITY = 640_000
@@ -6,21 +7,22 @@ STRING_CAPACITY = 640_000
 iota_counter = 0
 
 
-def register_operation(name, reset=False):
+def register_operation(name, scoped=False):
     global iota_counter
-    if reset:
-        iota_counter = 0
     result = iota_counter
     iota_counter += 1
 
     instructions_map[result] = name
+
+    if scoped:
+        scoped_instructions.append(result)
 
     return result
 
 
 class Operation:
     # Stack
-    PUSH_INT = register_operation("PUSH", True)
+    PUSH_INT = register_operation("PUSH")
     PUSH_STRING = register_operation("PUSH")
     DUP = register_operation("DUP")
     TWO_DUP = register_operation("2DUP")
@@ -61,14 +63,14 @@ class Operation:
 
 
 class Keyword:
-    IF = register_operation("IF")
+    IF = register_operation("IF", scoped=True)
     END = register_operation("END")
     ELSE = register_operation("ELSE")
     WHILE = register_operation("WHILE")
-    DO = register_operation("DO")
-    MACRO = register_operation("MACRO")
+    DO = register_operation("DO", scoped=True)
+    MACRO = register_operation("MACRO", scoped=True)
     IMPORT = register_operation("IMPORT")
-    MEMORY = register_operation("MEMORY")
+    MEMORY = register_operation("MEMORY", scoped=True)
 
 
 class TokenType:
