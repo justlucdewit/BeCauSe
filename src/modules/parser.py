@@ -138,6 +138,7 @@ def crossreference_blocks(tokens, file_path):
 
     while len(reversed_program) > 0:
         token = reversed_program.pop()
+
         op = None
         if token['type'] == TokenType.INT:
             op = {'type': Operation.PUSH_INT, 'value': int(
@@ -400,6 +401,9 @@ def crossreference_blocks(tokens, file_path):
         else:
             program.append(op)
             ip += 1
+
+    for i in program:
+        print(i)
 
     return program
 
