@@ -402,9 +402,6 @@ def crossreference_blocks(tokens, file_path):
             program.append(op)
             ip += 1
 
-    for i in program:
-        print(i)
-
     return program
 
 
