@@ -2,7 +2,7 @@ from modules.opcodes import Operation, Keyword, TokenType, scoped_instructions
 
 from modules.stdlibs import stdlibs
 
-BUILDIN_WORDS = {
+BUILTIN_WORDS = {
     '>': Operation.GREATER,
     '<': Operation.SMALLER,
     '+': Operation.ADD,
@@ -48,8 +48,8 @@ BUILDIN_WORDS = {
     'memory': Keyword.MEMORY
 }
 
-scoped_building_word = list(filter(
-    lambda x: BUILDIN_WORDS[x] in scoped_instructions, BUILDIN_WORDS.keys()))
+scoped_builtin_words = list(filter(
+    lambda x: BUILTIN_WORDS[x] in scoped_instructions, BUILTIN_WORDS.keys()))
 
 
 def find_col(line, start, predicate):
@@ -151,9 +151,9 @@ def crossreference_blocks(tokens, file_path):
             op = {'type': Operation.PUSH_INT,
                   'value': ord(token['value']), 'loc': token['loc']}
         elif token['type'] == TokenType.WORD:
-            if token['value'] in BUILDIN_WORDS:
+            if token['value'] in BUILTIN_WORDS:
                 op = {
-                    'type': BUILDIN_WORDS[token['value']], 'loc': token['loc']}
+                    'type': BUILTIN_WORDS[token['value']], 'loc': token['loc']}
             elif token['value'] in macros:
                 reversed_program += reversed(macros[token['value']]['tokens'])
                 continue
@@ -282,18 +282,18 @@ def crossreference_blocks(tokens, file_path):
 
                 # TODO: allow macros here
                 if (t['type'] == TokenType.WORD and
-                        BUILDIN_WORDS.get(t['value']) == Keyword.END):
+                        BUILTIN_WORDS.get(t['value']) == Keyword.END):
                     end_found = True
                     break
                 elif t['type'] == TokenType.INT:
                     evaluation_stack.append(t['value'])
                 elif (t['type'] == TokenType.WORD and
-                        BUILDIN_WORDS.get(t['value']) == Operation.ADD):
+                        BUILTIN_WORDS.get(t['value']) == Operation.ADD):
                     a = evaluation_stack.pop()
                     b = evaluation_stack.pop()
                     evaluation_stack.append(a + b)
                 elif (t['type'] == TokenType.WORD and
-                        BUILDIN_WORDS.get(t['value']) == Operation.MULTIPLY):
+                        BUILTIN_WORDS.get(t['value']) == Operation.MULTIPLY):
                     a = evaluation_stack.pop()
                     b = evaluation_stack.pop()
                     evaluation_stack.append(a * b)
@@ -354,13 +354,13 @@ def crossreference_blocks(tokens, file_path):
                     f" exists at {macro_file_path}:{macro_row}:{macro_col}")
                 exit(1)
 
-            # Make sure no buildins get overridden by macros
-            if constant_name in BUILDIN_WORDS:
+            # Make sure no builtins get overridden by macros
+            if constant_name in BUILTIN_WORDS:
                 (file_path, row, col) = constant_name_token['loc']
 
                 print(
                     f"{file_path}:{row}:{col}:\n\tConstant '{constant_name}' is "
-                    "overriding a build-in word")
+                    "overriding a built-in word")
 
                 exit(1)
 
@@ -418,14 +418,14 @@ def crossreference_blocks(tokens, file_path):
                     f" exists at {macro_file_path}:{macro_row}:{macro_col}")
                 exit(1)
 
-            # Make sure no buildins get overridden by macros
-            if macro_name in BUILDIN_WORDS:
+            # Make sure no builtins get overridden by macros
+            if macro_name in BUILTIN_WORDS:
                 (file_path, row, col) = macro_name_token['loc']
                 macro_name = macro_name_token['value']
 
                 print(
                     f"{file_path}:{row}:{col}:\n\tMacro '{macro_name}' is "
-                    "overriding a build-in word")
+                    "overriding a built-in word")
 
                 exit(1)
 
@@ -439,7 +439,7 @@ def crossreference_blocks(tokens, file_path):
                 token = reversed_program.pop()
 
                 if (token['type'] == TokenType.WORD and
-                        token['value'] in scoped_building_word):
+                        token['value'] in scoped_builtin_words):
                     macro['tokens'].append(token)
                     nestingDepth += 1
                 elif (token['type'] == TokenType.WORD and
