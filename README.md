@@ -4,12 +4,14 @@
 
 ## The Because, Compiled, Stack based language
 
-B basic like<br />
+
+B BeCauSe<br />
 C Compiled<br />
 S Simple
 
 Because is a self hostedm concatenative, stack based programming language. What
 else would you ask from an awesome programming language?
+
 
 ---
 
