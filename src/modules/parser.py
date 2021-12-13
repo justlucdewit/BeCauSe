@@ -310,7 +310,8 @@ def crossreference_blocks(tokens, file_path):
             # TODO get the size from the evualtion stack
             memory_regions[name_of_memory_region['value']] = 0
         elif op['type'] == Keyword.CONST:
-            # Const must be followed by a word, describing the name of the constant
+            # Const must be followed by a word, describing the name of the
+            # constant
             if len(reversed_program) == 0:
                 (file_path, row, col) = op['loc']
 
@@ -338,8 +339,8 @@ def crossreference_blocks(tokens, file_path):
                     tokentype_str = "character"
 
                 print(
-                    f"{file_path}:{row}:{col}:\n\tInvalid constant name. expected"
-                    f" a word, got {tokentype_str} '{constant_name}'")
+                    f"{file_path}:{row}:{col}:\n\tInvalid constant name. "
+                    f"expected a word, got {tokentype_str} '{constant_name}'")
                 exit(1)
 
             constant_name = constant_name_token['value']
@@ -350,8 +351,9 @@ def crossreference_blocks(tokens, file_path):
                 (macro_file_path, macro_row,
                  macro_col) = macros[constant_name]['loc']
                 print(
-                    f"{file_path}:{row}:{col}:\n\Constant '{constant_name}' already"
-                    f" exists at {macro_file_path}:{macro_row}:{macro_col}")
+                    f"{file_path}:{row}:{col}:\n\Constant '{constant_name}' "
+                    f"already exists at {macro_file_path}:{macro_row}:"
+                    f"{macro_col}")
                 exit(1)
 
             # Make sure no builtins get overridden by macros
@@ -359,8 +361,8 @@ def crossreference_blocks(tokens, file_path):
                 (file_path, row, col) = constant_name_token['loc']
 
                 print(
-                    f"{file_path}:{row}:{col}:\n\tConstant '{constant_name}' is "
-                    "overriding a built-in word")
+                    f"{file_path}:{row}:{col}:\n\tConstant '{constant_name}' "
+                    "is overriding a built-in word")
 
                 exit(1)
 
