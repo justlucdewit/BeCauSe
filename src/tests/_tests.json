@@ -123,5 +123,15 @@
         "test": "t025",
         "expected": "12\n",
         "description": "2drop"
+    },
+    {
+        "test": "t026",
+        "expected": "10\n9\n8\n7\n6\n5\n4\n3\n2\n1\nLIFTOFF!!\n",
+        "description": "while in macro"
+    },
+    {
+        "test": "t027",
+        "expected": "True\nTrue\nFalse\n",
+        "description": "if/else in macro"
     }
 ]

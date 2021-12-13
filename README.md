@@ -2,14 +2,16 @@
 
 # BeCauSe
 
-## The Basic like, Compiled, Stack based language
+## The Because, Compiled, Stack based language
+
 
 B BeCauSe<br />
 C Compiled<br />
 S Simple
 
-Its like forth, it compiles to native assembly, its stack based,
-all the cool kids use it. what alse would you ask from a language?
+Because is a self hostedm concatenative, stack based programming language. What
+else would you ask from an awesome programming language?
+
 
 ---
 

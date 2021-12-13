@@ -1,4 +1,4 @@
-from modules.opcodes import Operation, Keyword, TokenType
+from modules.opcodes import Operation, Keyword, TokenType, scoped_instructions
 
 from modules.stdlibs import stdlibs
 
@@ -46,6 +46,9 @@ BUILDIN_WORDS = {
     'import': Keyword.IMPORT,
     'memory': Keyword.MEMORY
 }
+
+scoped_building_word = list(filter(
+    lambda x: BUILDIN_WORDS[x] in scoped_instructions, BUILDIN_WORDS.keys()))
 
 
 def find_col(line, start, predicate):
@@ -135,6 +138,7 @@ def crossreference_blocks(tokens, file_path):
 
     while len(reversed_program) > 0:
         token = reversed_program.pop()
+
         op = None
         if token['type'] == TokenType.INT:
             op = {'type': Operation.PUSH_INT, 'value': int(
@@ -190,7 +194,7 @@ def crossreference_blocks(tokens, file_path):
 
             else:
                 print(
-                    "Parse Error: end can only be used to close 'if', 'else', "
+                    "Parse Error: end can only be use to close 'if', 'else', "
                     "'do' and 'macro' blocks")
                 exit(1)
             ip += 1
@@ -306,6 +310,7 @@ def crossreference_blocks(tokens, file_path):
             memory_regions[name_of_memory_region['value']] = 0
 
         elif op['type'] == Keyword.MACRO:
+
             # Macro must be followed by a name, code and 'end'
             if len(reversed_program) == 0:
                 (file_path, row, col) = op['loc']
@@ -367,11 +372,21 @@ def crossreference_blocks(tokens, file_path):
                 'tokens': []
             }
 
+            nestingDepth = 0
             while len(reversed_program) > 0:
                 token = reversed_program.pop()
 
-                if token['type'] == TokenType.WORD and token['value'] == 'end':
-                    break
+                if (token['type'] == TokenType.WORD and
+                        token['value'] in scoped_building_word):
+                    macro['tokens'].append(token)
+                    nestingDepth += 1
+                elif (token['type'] == TokenType.WORD and
+                        token['value'] == 'end'):
+                    if nestingDepth == 0:
+                        break
+                    else:
+                        macro['tokens'].append(token)
+                        nestingDepth -= 1
                 else:
                     macro['tokens'].append(token)
 

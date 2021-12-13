@@ -1,0 +1,21 @@
+// Usage:
+// <amount of sec> TIME_SLEEP_SEC
+//
+// Example:
+// 69 TIME_SLEEP_SEC
+macro TIME_SLEEP_SEC
+    mem 100 + !32
+    0 mem 108 + !32
+    mem 100 + 0 swap 35 syscall2
+end
+
+// Usage:
+// <amount of ns> TIME_SLEEP_NS
+//
+// Example:
+// 500000000 TIME_SLEEP_NS
+macro TIME_SLEEP_NS
+    0 mem 100 + !32
+    mem 108 + !32
+    mem 100 + 0 swap 35 syscall2
+end

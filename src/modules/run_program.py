@@ -1,5 +1,6 @@
 from modules.opcodes import MEMORY_CAPACITY, STRING_CAPACITY
 from modules.opcodes import Operation, Keyword
+from time import sleep
 
 debug = False
 stack = []
@@ -245,8 +246,7 @@ def run_program(program):
 def emulate_unix(syscall, values):
     # sys read
     if syscall == 0:
-        if len(values) < 3:
-            unix_emulation_error(3, len(values))
+        unix_emulation_error(3, len(values))
 
         # read from stdin
         if values[0] == 0:
@@ -261,23 +261,44 @@ def emulate_unix(syscall, values):
 
     # sys write
     elif syscall == 1:
-        if (len(values) < 3):
-            unix_emulation_error(3, len(values))
+        unix_emulation_error(3, len(values))
 
         # write to std out
         if (values[0] == 1):
             for byte in memory[values[1]:values[1]+values[2]]:
                 print(chr(byte), end="")
 
+    # sys nanosleep
+    elif syscall == 35:
+        unix_emulation_error(1, len(values))
+        time_spec_ptr = values[0]
+
+        time_spec_sec = memory[time_spec_ptr:time_spec_ptr + 8]
+        time_spec_ns = memory[time_spec_ptr+8:time_spec_ptr + 12]
+
+        sleep_ns = int.from_bytes(time_spec_ns, "little")
+        sleep_sec = int.from_bytes(time_spec_sec, "little")
+
+        sleep_time = sleep_sec + sleep_ns / 1e9
+
+        sleep(sleep_time)
+
     # sys exit
     elif syscall == 60:
-        if (len(values) < 1):
-            unix_emulation_error(1, len(values))
+        unix_emulation_error(1, len(values))
         exit(values[0])
+
+    else:
+        print(
+            f"Simulation Error: syscall {syscall} not implemented in "
+            "interpreter")
+
+        exit(-1)
 
 
 def unix_emulation_error(expected_count, received_count):
-    print(
-        f"Simulation Error: expected at least {expected_count} values for "
-        "syscall, got {received_count} values")
-    exit(-1)
+    if received_count < expected_count:
+        print(
+            f"Simulation Error: expected at least {expected_count} values for "
+            "syscall, got {received_count} values")
+        exit(-1)
