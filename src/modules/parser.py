@@ -17,6 +17,7 @@ BUILDIN_WORDS = {
     'if': Keyword.IF,
     'else': Keyword.ELSE,
     'macro': Keyword.MACRO,
+    'const': Keyword.CONST,
     'end': Keyword.END,
     'dup': Operation.DUP,
     '2dup': Operation.TWO_DUP,
@@ -308,6 +309,67 @@ def crossreference_blocks(tokens, file_path):
 
             # TODO get the size from the evualtion stack
             memory_regions[name_of_memory_region['value']] = 0
+        elif op['type'] == Keyword.CONST:
+            # Const must be followed by a word, describing the name of the constant
+            if len(reversed_program) == 0:
+                (file_path, row, col) = op['loc']
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tWrong usage of const "
+                    " feature\n\const keyword must be followed by a "
+                    "word that will be used as the reference to the value."
+                    "\n\tfor example:\n\n\t"
+                    "const meaning_of_life 64000\n")
+                exit(1)
+
+            # Get the name of the constant
+            constant_name_token = reversed_program.pop()
+
+            if constant_name_token['type'] != TokenType.WORD:
+                (file_path, row, col) = constant_name_token['loc']
+                constant_name = constant_name_token['value']
+                tokentype_str = "unknown"
+
+                if constant_name_token['type'] == TokenType.STRING:
+                    tokentype_str = "string"
+                elif constant_name_token['type'] == TokenType.INT:
+                    tokentype_str = "integer"
+                elif constant_name_token['type'] == TokenType.CHAR:
+                    tokentype_str = "character"
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tInvalid constant name. expected"
+                    f" a word, got {tokentype_str} '{constant_name}'")
+                exit(1)
+
+            constant_name = constant_name_token['value']
+
+            # Make sure no 2 constants with same name get defined
+            if constant_name in macros:
+                (file_path, row, col) = constant_name_token['loc']
+                (macro_file_path, macro_row,
+                 macro_col) = macros[constant_name]['loc']
+                print(
+                    f"{file_path}:{row}:{col}:\n\Constant '{constant_name}' already"
+                    f" exists at {macro_file_path}:{macro_row}:{macro_col}")
+                exit(1)
+
+            # Make sure no buildins get overridden by macros
+            if constant_name in BUILDIN_WORDS:
+                (file_path, row, col) = constant_name_token['loc']
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tConstant '{constant_name}' is "
+                    "overriding a build-in word")
+
+                exit(1)
+
+            constant = {
+                'loc': constant_name_token['loc'],
+                'tokens': [reversed_program.pop()]
+            }
+            
+            macros[constant_name] = constant
 
         elif op['type'] == Keyword.MACRO:
 
