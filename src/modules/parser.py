@@ -18,6 +18,7 @@ BUILTIN_WORDS = {
     'else': Keyword.ELSE,
     'macro': Keyword.MACRO,
     'const': Keyword.CONST,
+    'enum': Keyword.ENUM,
     'end': Keyword.END,
     'dup': Operation.DUP,
     '2dup': Operation.TWO_DUP,
@@ -366,6 +367,17 @@ def crossreference_blocks(tokens, file_path):
 
                 exit(1)
 
+            if len(reversed_program) <= 0:
+                (file_path, row, col) = op['loc']
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tWrong usage of const "
+                    " feature"
+                    "\n\tName of constant must be followed by a number or a"
+                    "\n\tstring. For example:\n\n\t"
+                    "const meaning_of_life 64000\n")
+                exit(1)
+
             constant = {
                 'loc': constant_name_token['loc'],
                 'tokens': [reversed_program.pop()]
@@ -437,6 +449,7 @@ def crossreference_blocks(tokens, file_path):
             }
 
             nestingDepth = 0
+
             while len(reversed_program) > 0:
                 token = reversed_program.pop()
 
@@ -462,6 +475,53 @@ def crossreference_blocks(tokens, file_path):
                 exit(1)
 
             macros[macro_name] = macro
+        elif op['type'] == Keyword.ENUM:
+            current_op = reversed_program.pop()
+            enum_name_token = current_op
+
+            if enum_name_token['type'] != TokenType.WORD:
+                (file_path, row, col) = enum_name_token['loc']
+                print(
+                    f"{file_path}:{row}:{col}:\n\tWrong usage of enum feature"
+                    "\n\tenum name must be a word, For example: \n\n\t"
+                    "enum DAYS"
+                    "\n\t\tMONDAY"
+                    "\n\t\tTUESDAY"
+                    "\n\t\tWEDNESDAY"
+                    "\n\t\tTHURSDAY"
+                    "\n\t\tFRIDAY"
+                    "\n\t\tSATURDAY"
+                    "\n\t\tSUNDAY"
+                    "\n\tend")
+                exit(1)
+
+            i = 0
+            enum_name = enum_name_token['value']
+            current_op = reversed_program.pop()
+            while current_op['value'] != 'end':
+                enum_member_name = current_op['value']
+
+                enum_member = {
+                    'loc': enum_name_token['loc'],
+                    'tokens': [
+                        {
+                            'loc': enum_name_token['loc'],
+                            'type': TokenType.INT,
+                            'value': i
+                        }
+                    ]
+                }
+
+                i += 1
+                macros[f"{enum_name}:{enum_member_name}"] = enum_member
+                current_op = reversed_program.pop()
+
+                if len(reversed_program) == 0 and current_op['value'] != 'end':
+                    (file_path, row, col) = enum_name_token['loc']
+                    print(
+                        f"{file_path}:{row}:{col}:\n\tUnterminated enumeration"
+                    )
+                    exit(1)
         else:
             program.append(op)
             ip += 1
