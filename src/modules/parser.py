@@ -318,9 +318,8 @@ def crossreference_blocks(tokens, file_path):
 
                 print(
                     f"{file_path}:{row}:{col}:\n\tWrong usage of const "
-                    " feature\n\t"
-                    "const keyword must be followed by a word that will be"
-                    "\n\tused as the reference to the value."
+                    " feature\n\tconst keyword must be followed by a "
+                    "word that will be used as the reference to the value."
                     "\n\tfor example:\n\n\t"
                     "const meaning_of_life 64000\n")
                 exit(1)
