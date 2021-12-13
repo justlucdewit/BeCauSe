@@ -1,0 +1,10 @@
+import "std/io"
+
+// 45
+const a 5
+const b 20
+a a * b + dump
+
+// Hello there
+const string "Hello there\n"
+string IO_WRITE

@@ -133,5 +133,10 @@
         "test": "t027",
         "expected": "True\nTrue\nFalse\n",
         "description": "if/else in macro"
+    },
+    {
+        "test": "t028",
+        "expected": "45\nHello there\n",
+        "description": "constants"
     }
 ]
