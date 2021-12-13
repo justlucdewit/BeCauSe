@@ -317,7 +317,7 @@ def crossreference_blocks(tokens, file_path):
 
                 print(
                     f"{file_path}:{row}:{col}:\n\tWrong usage of const "
-                    " feature\n\const keyword must be followed by a "
+                    " feature\n\tconst keyword must be followed by a "
                     "word that will be used as the reference to the value."
                     "\n\tfor example:\n\n\t"
                     "const meaning_of_life 64000\n")
@@ -351,7 +351,7 @@ def crossreference_blocks(tokens, file_path):
                 (macro_file_path, macro_row,
                  macro_col) = macros[constant_name]['loc']
                 print(
-                    f"{file_path}:{row}:{col}:\n\Constant '{constant_name}' "
+                    f"{file_path}:{row}:{col}:\n\tConstant '{constant_name}' "
                     f"already exists at {macro_file_path}:{macro_row}:"
                     f"{macro_col}")
                 exit(1)
@@ -370,7 +370,7 @@ def crossreference_blocks(tokens, file_path):
                 'loc': constant_name_token['loc'],
                 'tokens': [reversed_program.pop()]
             }
-            
+
             macros[constant_name] = constant
 
         elif op['type'] == Keyword.MACRO:
