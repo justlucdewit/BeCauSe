@@ -2,7 +2,7 @@
 
 import "std/io"
 
-// List of build in words
+// List of built in words
 macro OP_PUSH_INT    0 end
 macro OP_ADD         1 end
 macro OP_DUMP        2 end

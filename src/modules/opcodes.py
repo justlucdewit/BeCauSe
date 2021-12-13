@@ -69,6 +69,7 @@ class Keyword:
     WHILE = register_operation("WHILE")
     DO = register_operation("DO", scoped=True)
     MACRO = register_operation("MACRO", scoped=True)
+    CONST = register_operation("CONST")
     IMPORT = register_operation("IMPORT")
     MEMORY = register_operation("MEMORY", scoped=True)
 

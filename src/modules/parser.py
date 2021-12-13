@@ -2,7 +2,7 @@ from modules.opcodes import Operation, Keyword, TokenType, scoped_instructions
 
 from modules.stdlibs import stdlibs
 
-BUILDIN_WORDS = {
+BUILTIN_WORDS = {
     '>': Operation.GREATER,
     '<': Operation.SMALLER,
     '+': Operation.ADD,
@@ -17,6 +17,7 @@ BUILDIN_WORDS = {
     'if': Keyword.IF,
     'else': Keyword.ELSE,
     'macro': Keyword.MACRO,
+    'const': Keyword.CONST,
     'end': Keyword.END,
     'dup': Operation.DUP,
     '2dup': Operation.TWO_DUP,
@@ -47,8 +48,8 @@ BUILDIN_WORDS = {
     'memory': Keyword.MEMORY
 }
 
-scoped_building_word = list(filter(
-    lambda x: BUILDIN_WORDS[x] in scoped_instructions, BUILDIN_WORDS.keys()))
+scoped_builtin_words = list(filter(
+    lambda x: BUILTIN_WORDS[x] in scoped_instructions, BUILTIN_WORDS.keys()))
 
 
 def find_col(line, start, predicate):
@@ -150,9 +151,9 @@ def crossreference_blocks(tokens, file_path):
             op = {'type': Operation.PUSH_INT,
                   'value': ord(token['value']), 'loc': token['loc']}
         elif token['type'] == TokenType.WORD:
-            if token['value'] in BUILDIN_WORDS:
+            if token['value'] in BUILTIN_WORDS:
                 op = {
-                    'type': BUILDIN_WORDS[token['value']], 'loc': token['loc']}
+                    'type': BUILTIN_WORDS[token['value']], 'loc': token['loc']}
             elif token['value'] in macros:
                 reversed_program += reversed(macros[token['value']]['tokens'])
                 continue
@@ -281,18 +282,18 @@ def crossreference_blocks(tokens, file_path):
 
                 # TODO: allow macros here
                 if (t['type'] == TokenType.WORD and
-                        BUILDIN_WORDS.get(t['value']) == Keyword.END):
+                        BUILTIN_WORDS.get(t['value']) == Keyword.END):
                     end_found = True
                     break
                 elif t['type'] == TokenType.INT:
                     evaluation_stack.append(t['value'])
                 elif (t['type'] == TokenType.WORD and
-                        BUILDIN_WORDS.get(t['value']) == Operation.ADD):
+                        BUILTIN_WORDS.get(t['value']) == Operation.ADD):
                     a = evaluation_stack.pop()
                     b = evaluation_stack.pop()
                     evaluation_stack.append(a + b)
                 elif (t['type'] == TokenType.WORD and
-                        BUILDIN_WORDS.get(t['value']) == Operation.MULTIPLY):
+                        BUILTIN_WORDS.get(t['value']) == Operation.MULTIPLY):
                     a = evaluation_stack.pop()
                     b = evaluation_stack.pop()
                     evaluation_stack.append(a * b)
@@ -308,6 +309,67 @@ def crossreference_blocks(tokens, file_path):
 
             # TODO get the size from the evualtion stack
             memory_regions[name_of_memory_region['value']] = 0
+        elif op['type'] == Keyword.CONST:
+            # Const must be followed by a word, describing the name of the constant
+            if len(reversed_program) == 0:
+                (file_path, row, col) = op['loc']
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tWrong usage of const "
+                    " feature\n\const keyword must be followed by a "
+                    "word that will be used as the reference to the value."
+                    "\n\tfor example:\n\n\t"
+                    "const meaning_of_life 64000\n")
+                exit(1)
+
+            # Get the name of the constant
+            constant_name_token = reversed_program.pop()
+
+            if constant_name_token['type'] != TokenType.WORD:
+                (file_path, row, col) = constant_name_token['loc']
+                constant_name = constant_name_token['value']
+                tokentype_str = "unknown"
+
+                if constant_name_token['type'] == TokenType.STRING:
+                    tokentype_str = "string"
+                elif constant_name_token['type'] == TokenType.INT:
+                    tokentype_str = "integer"
+                elif constant_name_token['type'] == TokenType.CHAR:
+                    tokentype_str = "character"
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tInvalid constant name. expected"
+                    f" a word, got {tokentype_str} '{constant_name}'")
+                exit(1)
+
+            constant_name = constant_name_token['value']
+
+            # Make sure no 2 constants with same name get defined
+            if constant_name in macros:
+                (file_path, row, col) = constant_name_token['loc']
+                (macro_file_path, macro_row,
+                 macro_col) = macros[constant_name]['loc']
+                print(
+                    f"{file_path}:{row}:{col}:\n\Constant '{constant_name}' already"
+                    f" exists at {macro_file_path}:{macro_row}:{macro_col}")
+                exit(1)
+
+            # Make sure no builtins get overridden by macros
+            if constant_name in BUILTIN_WORDS:
+                (file_path, row, col) = constant_name_token['loc']
+
+                print(
+                    f"{file_path}:{row}:{col}:\n\tConstant '{constant_name}' is "
+                    "overriding a built-in word")
+
+                exit(1)
+
+            constant = {
+                'loc': constant_name_token['loc'],
+                'tokens': [reversed_program.pop()]
+            }
+            
+            macros[constant_name] = constant
 
         elif op['type'] == Keyword.MACRO:
 
@@ -356,14 +418,14 @@ def crossreference_blocks(tokens, file_path):
                     f" exists at {macro_file_path}:{macro_row}:{macro_col}")
                 exit(1)
 
-            # Make sure no buildins get overridden by macros
-            if macro_name in BUILDIN_WORDS:
+            # Make sure no builtins get overridden by macros
+            if macro_name in BUILTIN_WORDS:
                 (file_path, row, col) = macro_name_token['loc']
                 macro_name = macro_name_token['value']
 
                 print(
                     f"{file_path}:{row}:{col}:\n\tMacro '{macro_name}' is "
-                    "overriding a build-in word")
+                    "overriding a built-in word")
 
                 exit(1)
 
@@ -377,7 +439,7 @@ def crossreference_blocks(tokens, file_path):
                 token = reversed_program.pop()
 
                 if (token['type'] == TokenType.WORD and
-                        token['value'] in scoped_building_word):
+                        token['value'] in scoped_builtin_words):
                     macro['tokens'].append(token)
                     nestingDepth += 1
                 elif (token['type'] == TokenType.WORD and
