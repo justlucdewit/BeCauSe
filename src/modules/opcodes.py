@@ -70,6 +70,7 @@ class Keyword:
     DO = register_operation("DO", scoped=True)
     MACRO = register_operation("MACRO", scoped=True)
     CONST = register_operation("CONST")
+    ENUM = register_operation("ENUM", scoped=True)
     IMPORT = register_operation("IMPORT")
     MEMORY = register_operation("MEMORY", scoped=True)
 
