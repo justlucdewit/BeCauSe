@@ -516,6 +516,14 @@ def crossreference_blocks(tokens, file_path):
                 macros[f"{enum_name}:{enum_member_name}"] = enum_member
                 current_op = reversed_program.pop()
 
+                if current_op['type'] != TokenType.WORD:
+                    (file_path, row, col) = current_op['loc']
+                    print(
+                        f"{file_path}:{row}:{col}:\n\t Values in enumerations "
+                        "can only be words, not numbers, strings, characters "
+                        "or other token types")
+                    exit(1)
+
                 if len(reversed_program) == 0 and current_op['value'] != 'end':
                     (file_path, row, col) = enum_name_token['loc']
                     print(

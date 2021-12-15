@@ -64,6 +64,7 @@ OP:PUSH_INT 6 PUSH_OP
 OP:ADD 0      PUSH_OP
 OP:DUMP 0     PUSH_OP
 
+// Print the program
 DUMP_PROGRAM
 
 macro COMPILED_PROGRAM
