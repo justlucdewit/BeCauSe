@@ -138,5 +138,10 @@
         "test": "t028",
         "expected": "45\nHello there\n",
         "description": "constants"
+    },
+    {
+        "test": "t029",
+        "expected": "1\n5\n",
+        "description": "enumeration"
     }
 ]

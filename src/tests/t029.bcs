@@ -1,0 +1,10 @@
+enum DAYS
+    MONDAY
+    TUESDAY
+    WEDNESDAY
+    THURSDAY
+    SATURDAY
+    SUNDAY
+end
+
+DAYS:MONDAY dump

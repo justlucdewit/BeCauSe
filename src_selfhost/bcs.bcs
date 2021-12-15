@@ -1,21 +1,27 @@
 // Self hosted bcs compiler
 
+// Imported libraries
 import "std/io"
 
 // List of built in words
-macro OP_PUSH_INT    0 end
-macro OP_ADD         1 end
-macro OP_DUMP        2 end
+enum OP
+    PUSH_INT
+    DUMP
+    ADD
+end
 
 macro DUMP_PROGRAM
+    // Print the first line
+    "------------\n" IO_WRITE
+
     // Loop over the operations
     0 while dup OPS_COUNT @64 < do
         // Get pointer to the current program instruction
         dup sizeof(OP) * OPS +
-        
+
         // Print its data
         "Type:    " IO_WRITE dup     @64 dump
-        "Operand: " IO_WRITE dup 8 + @64 dump
+        "Operand: " IO_WRITE 8 + @64 dump
         "------------\n" IO_WRITE
 
         // Increment the index
@@ -42,7 +48,7 @@ macro PUSH_OP
     OPS_COUNT @64 sizeof(OP) * OPS +
 
     // Write the operand into memory
-    dup 8 + rot !64
+    dup 8 + rot swap !64
 
     // Write the type into memory
     !64
@@ -53,10 +59,10 @@ end
 
 // fill up the program with
 // hard coded operations
-OP_PUSH_INT 5 PUSH_OP
-OP_PUSH_INT 6 PUSH_OP
-OP_ADD      0 PUSH_OP
-OP_DUMP     0 PUSH_OP
+OP:PUSH_INT 5 PUSH_OP
+OP:PUSH_INT 6 PUSH_OP
+OP:ADD 0      PUSH_OP
+OP:DUMP 0     PUSH_OP
 
 DUMP_PROGRAM
 
