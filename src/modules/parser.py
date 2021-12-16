@@ -15,6 +15,7 @@ BUILTIN_WORDS = {
     'mod': Operation.MODULE,
     'dump': Operation.PRINT,
     '=': Operation.EQUAL,
+    '>=': Operation.GREATER_EQUAL,
     'if': Keyword.IF,
     'else': Keyword.ELSE,
     'macro': Keyword.MACRO,

@@ -239,10 +239,15 @@ def run_program(program):
             b = stack.pop()
             stack.append(b % a)
 
+        elif operation['type'] == Operation.GREATER_EQUAL:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(int(b >= a))
+
         else:
             print(
                 "Simulation Error: Unknown opcode "
-                "encountered in run_program")
+                "encountered in run_program()")
             exit(-1)
 
         ip += 1
