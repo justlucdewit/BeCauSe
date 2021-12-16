@@ -143,5 +143,10 @@
         "test": "t029",
         "expected": "1\n5\n",
         "description": "enumeration"
+    },
+    {
+        "test": "t030",
+        "expected": "Where is here?\nHere is: ./tests/t030.bcs:5:1",
+        "description": "here"
     }
 ]

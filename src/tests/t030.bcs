@@ -1,0 +1,5 @@
+import "std/io"
+
+"Where is here?\n" IO_WRITE
+"Here is: " IO_WRITE
+here IO_WRITE
