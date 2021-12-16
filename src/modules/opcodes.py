@@ -43,6 +43,7 @@ class Operation:
     SHIFT_RIGHT = register_operation("BITWISE RIGHTSHIFT")
     BITWISE_AND = register_operation("BITWISE AND")
     BITWISE_OR = register_operation("BITWISE OR")
+    MODULE = register_operation("MODULATION")
 
     # IO
     PRINT = register_operation("PRINT")

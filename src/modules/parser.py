@@ -12,6 +12,7 @@ BUILTIN_WORDS = {
     '<<': Operation.SHIFT_LEFT,
     '|': Operation.BITWISE_OR,
     '&': Operation.BITWISE_AND,
+    'mod': Operation.MODULE,
     'dump': Operation.PRINT,
     '=': Operation.EQUAL,
     'if': Keyword.IF,

@@ -321,6 +321,13 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    pop r9\n")
                 output.write("    syscall\n\n")
 
+            elif opcode['type'] == Operation.MODULE:
+                output.write("    pop rcx\n")
+                output.write("    pop rax\n")
+                output.write("    xor rdx, rdx\n")
+                output.write("    div rcx\n")
+                output.write("    push rdx\n\n")
+
             else:
                 print(
                     "Compile Error: Unknown opcode" +

@@ -234,6 +234,11 @@ def run_program(program):
             emulate_unix(syscall_num, [stack.pop(), stack.pop(
             ), stack.pop(), stack.pop(), stack.pop(), stack.pop()])
 
+        elif operation['type'] == Operation.MODULE:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(b % a)
+
         else:
             print(
                 "Simulation Error: Unknown opcode "
