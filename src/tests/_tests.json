@@ -158,5 +158,10 @@
         "test": "t032",
         "expected": "0\n1\n1\n",
         "description": "bigger then equal"
+    },
+    {
+        "test": "t033",
+        "expected": "1\n1\n0\n",
+        "description": "smaller then equal"
     }
 ]
