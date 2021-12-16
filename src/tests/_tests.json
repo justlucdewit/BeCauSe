@@ -153,5 +153,10 @@
         "test": "t031",
         "expected": "476\n1\n",
         "description": "modulation"
+    },
+    {
+        "test": "t032",
+        "expected": "0\n1\n1\n",
+        "description": "bigger then equal"
     }
 ]
