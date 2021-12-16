@@ -148,5 +148,10 @@
         "test": "t030",
         "expected": "Where is here?\nHere is: ./tests/t030.bcs:5:1",
         "description": "here"
+    },
+    {
+        "test": "t031",
+        "expected": "476\n1\n",
+        "description": "modulation"
     }
 ]
