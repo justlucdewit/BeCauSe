@@ -163,5 +163,10 @@
         "test": "t033",
         "expected": "1\n1\n0\n",
         "description": "smaller then equal"
+    },
+    {
+        "test": "t034",
+        "expected": "1\n0\n1\n",
+        "description": "not equal"
     }
 ]
