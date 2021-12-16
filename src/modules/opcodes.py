@@ -39,6 +39,7 @@ class Operation:
     GREATER = register_operation("GREATER")
     SMALLER = register_operation("SMALLER")
     EQUAL = register_operation("EQUAL")
+    NOT_EQUAL = register_operation("NOT EQUAL")
     SHIFT_LEFT = register_operation("BITWISE LEFTSHIFT")
     SHIFT_RIGHT = register_operation("BITWISE RIGHTSHIFT")
     BITWISE_AND = register_operation("BITWISE AND")

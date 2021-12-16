@@ -205,6 +205,15 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    cmove rcx, rdx\n")
                 output.write("    push rcx\n\n")
 
+            elif opcode['type'] == Operation.NOT_EQUAL:
+                output.write("    mov rcx, 1\n")
+                output.write("    mov rdx, 0\n")
+                output.write("    pop rax\n")
+                output.write("    pop rbx\n")
+                output.write("    cmp rax, rbx\n")
+                output.write("    cmove rcx, rdx\n")
+                output.write("    push rcx\n\n")
+
             elif opcode['type'] == Keyword.IF:
                 output.write("    pop rax\n")
                 output.write("    test rax, rax\n")

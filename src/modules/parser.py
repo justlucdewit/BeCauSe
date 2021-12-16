@@ -15,6 +15,7 @@ BUILTIN_WORDS = {
     'mod': Operation.MODULE,
     'dump': Operation.PRINT,
     '=': Operation.EQUAL,
+    '!=': Operation.NOT_EQUAL,
     '>=': Operation.GREATER_EQUAL,
     '<=': Operation.SMALLER_EQUAL,
     'if': Keyword.IF,
@@ -157,7 +158,10 @@ def crossreference_blocks(tokens, file_path):
                   'value': ord(token['value']), 'loc': token['loc']}
         elif token['type'] == TokenType.WORD:
             if token['value'] in BUILTIN_WORDS:
-                op = {'type': BUILTIN_WORDS[token['value']], 'loc': token['loc']}
+                op = {
+                    'type': BUILTIN_WORDS[token['value']],
+                    'loc': token['loc']
+                }
             elif token['value'] in macros:
                 reversed_program += reversed(macros[token['value']]['tokens'])
                 continue

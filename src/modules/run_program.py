@@ -124,6 +124,11 @@ def run_program(program):
             b = stack.pop()
             stack.append(int(a == b))
 
+        elif operation['type'] == Operation.NOT_EQUAL:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(int(a != b))
+
         elif operation['type'] == Keyword.IF:
             a = stack.pop()
             if a == 0:
