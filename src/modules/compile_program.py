@@ -337,6 +337,15 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    cmovge rcx, rdx\n")
                 output.write("    push rcx\n\n")
 
+            elif opcode['type'] == Operation.SMALLER_EQUAL:
+                output.write("    mov rcx, 0\n")
+                output.write("    mov rdx, 1\n")
+                output.write("    pop rbx\n")
+                output.write("    pop rax\n")
+                output.write("    cmp rax, rbx\n")
+                output.write("    cmovle rcx, rdx\n")
+                output.write("    push rcx\n\n")
+
             else:
                 print(
                     "Compile Error: Unknown opcode" +

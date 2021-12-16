@@ -16,6 +16,7 @@ BUILTIN_WORDS = {
     'dump': Operation.PRINT,
     '=': Operation.EQUAL,
     '>=': Operation.GREATER_EQUAL,
+    '<=': Operation.SMALLER_EQUAL,
     'if': Keyword.IF,
     'else': Keyword.ELSE,
     'macro': Keyword.MACRO,

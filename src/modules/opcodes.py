@@ -45,6 +45,7 @@ class Operation:
     BITWISE_OR = register_operation("BITWISE OR")
     MODULE = register_operation("MODULATION")
     GREATER_EQUAL = register_operation("GREATER_EQUAL")
+    SMALLER_EQUAL = register_operation("SMALLER_EQUAL")
 
     # IO
     PRINT = register_operation("PRINT")

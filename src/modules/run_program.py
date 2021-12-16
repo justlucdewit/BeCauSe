@@ -244,6 +244,11 @@ def run_program(program):
             b = stack.pop()
             stack.append(int(b >= a))
 
+        elif operation['type'] == Operation.SMALLER_EQUAL:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(int(b <= a))
+
         else:
             print(
                 "Simulation Error: Unknown opcode "
