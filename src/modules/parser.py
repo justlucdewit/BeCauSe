@@ -46,7 +46,8 @@ BUILTIN_WORDS = {
     'syscall5': Operation.SYSCALL5,
     'syscall6': Operation.SYSCALL6,
     'import': Keyword.IMPORT,
-    'memory': Keyword.MEMORY
+    'memory': Keyword.MEMORY,
+    'here': Operation.HERE
 }
 
 scoped_builtin_words = list(filter(
@@ -153,8 +154,7 @@ def crossreference_blocks(tokens, file_path):
                   'value': ord(token['value']), 'loc': token['loc']}
         elif token['type'] == TokenType.WORD:
             if token['value'] in BUILTIN_WORDS:
-                op = {
-                    'type': BUILTIN_WORDS[token['value']], 'loc': token['loc']}
+                op = {'type': BUILTIN_WORDS[token['value']], 'loc': token['loc']}
             elif token['value'] in macros:
                 reversed_program += reversed(macros[token['value']]['tokens'])
                 continue
@@ -530,6 +530,14 @@ def crossreference_blocks(tokens, file_path):
                         f"{file_path}:{row}:{col}:\n\tUnterminated enumeration"
                     )
                     exit(1)
+        elif op['type'] == Operation.HERE:
+            (file_path, row, col) = op['loc']
+
+            program.append({
+                'type': Operation.PUSH_STRING,
+                'value': f"{file_path}:{row}:{col}",
+                'loc': op['loc']
+            })
         else:
             program.append(op)
             ip += 1

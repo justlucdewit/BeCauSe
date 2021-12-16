@@ -43,6 +43,8 @@ class Operation:
     SHIFT_RIGHT = register_operation("BITWISE RIGHTSHIFT")
     BITWISE_AND = register_operation("BITWISE AND")
     BITWISE_OR = register_operation("BITWISE OR")
+
+    # IO
     PRINT = register_operation("PRINT")
     SYSCALL0 = register_operation("SYSCALL0")
     SYSCALL1 = register_operation("SYSCALL1")
@@ -51,6 +53,8 @@ class Operation:
     SYSCALL4 = register_operation("SYSCALL4")
     SYSCALL5 = register_operation("SYSCALL5")
     SYSCALL6 = register_operation("SYSCALL6")
+
+    # Memory
     MEM = register_operation("MEM")
     STORE8 = register_operation("STORE8")
     STORE16 = register_operation("STORE16")
@@ -60,6 +64,9 @@ class Operation:
     LOAD16 = register_operation("LOAD16")
     LOAD32 = register_operation("LOAD32")
     LOAD64 = register_operation("LOAD64")
+
+    # Other
+    HERE = register_operation("HERE")
 
 
 class Keyword:
