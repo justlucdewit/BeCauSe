@@ -147,7 +147,7 @@ for test in tests:
         for i in pi_errors:
             buffer += "\t" + i
         buffer += "\n"
-        buffer += '\t' + pi_results.replace('\n', '\n\t') + '\n'
+        buffer += '\t' + pi_results.replace('\n', '\\n\n\t') + '\n'
 
     if not compilation_succeeded:
 
@@ -156,13 +156,12 @@ for test in tests:
             buffer += "\ttest crashed:\n"
         for i in pc_errors:
             buffer += "\t" + i
-        buffer += "\n"
-        buffer += '\t' + pc_results.replace('\n', '\n\t') + '\n'
+        buffer += '\t' + pc_results.replace('\n', '\\n\n\t') + '\n'
 
     if not compilation_succeeded or not interpretation_succeeded:
 
         buffer += "\t----- expected result -----\n"
-        buffer += '\t' + expected_result.replace('\n', '\n\t') + '\n'
+        buffer += '\t' + expected_result.replace('\n', '\\n\n\t') + '\n'
         failed_tests.append(buffer)
 
 print(
