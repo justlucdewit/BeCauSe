@@ -111,6 +111,11 @@ def run_program(program):
             b = stack.pop()
             stack.append(int(b and a))
 
+        elif operation['type'] == Operation.LOGICAL_OR:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(int(b or a))
+
         elif operation['type'] == Operation.PRINT:
             print(stack.pop())
 

@@ -13,6 +13,7 @@ BUILTIN_WORDS = {
     '|': Operation.BITWISE_OR,
     '&': Operation.BITWISE_AND,
     'and': Operation.LOGICAL_AND,
+    'or': Operation.LOGICAL_OR,
     'mod': Operation.MODULE,
     'dump': Operation.PRINT,
     '=': Operation.EQUAL,
