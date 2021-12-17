@@ -109,12 +109,12 @@ def run_program(program):
         elif operation['type'] == Operation.LOGICAL_AND:
             a = stack.pop()
             b = stack.pop()
-            stack.append(int(b and a))
+            stack.append(int(1 if b and a else 0))
 
         elif operation['type'] == Operation.LOGICAL_OR:
             a = stack.pop()
             b = stack.pop()
-            stack.append(int(b or a))
+            stack.append(int(1 if b or a else 0))
 
         elif operation['type'] == Operation.PRINT:
             print(stack.pop())
