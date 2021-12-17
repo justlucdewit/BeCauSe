@@ -44,6 +44,7 @@ class Operation:
     SHIFT_RIGHT = register_operation("BITWISE RIGHTSHIFT")
     BITWISE_AND = register_operation("BITWISE AND")
     BITWISE_OR = register_operation("BITWISE OR")
+    LOGICAL_AND = register_operation("LOGICAL AND")
     MODULE = register_operation("MODULATION")
     GREATER_EQUAL = register_operation("GREATER_EQUAL")
     SMALLER_EQUAL = register_operation("SMALLER_EQUAL")

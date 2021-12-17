@@ -174,6 +174,17 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    or rbx, rax\n")
                 output.write("    push rbx\n\n")
 
+            elif opcode['type'] == Operation.LOGICAL_AND:
+                output.write("    pop rax\n")
+                output.write("    pop rbx\n")
+                output.write("    mov rcx, 1\n")
+                output.write("    mov rdx, 0\n")
+                output.write("    cmp rax, 0\n")
+                output.write("    cmove rcx, rdx\n")
+                output.write("    cmp rbx, 0\n")
+                output.write("    cmove rcx, rdx\n")
+                output.write("    push rcx\n\n")
+
             elif opcode['type'] == Operation.PRINT:
                 output.write("    pop rdi\n")
                 output.write("    call dump\n\n")
