@@ -173,5 +173,10 @@
         "test": "t035",
         "expected": "0\n0\n0\n1\n",
         "description": "logical and"
+    },
+    {
+        "test": "t036",
+        "expected": "0\n1\n1\n1\n",
+        "description": "logical or"
     }
 ]
