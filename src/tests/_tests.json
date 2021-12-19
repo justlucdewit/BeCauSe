@@ -183,5 +183,10 @@
         "test": "t037",
         "expected": "69\n40\n23\n",
         "description": "maximum"
+    },
+    {
+        "test": "t038",
+        "expected": "45\n22\n23\n",
+        "description": "minimum"
     }
 ]
