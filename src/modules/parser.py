@@ -16,6 +16,7 @@ BUILTIN_WORDS = {
     'or': Operation.LOGICAL_OR,
     'mod': Operation.MODULE,
     'max': Operation.MAXIMUM,
+    'min': Operation.MINIMUM,
     'dump': Operation.PRINT,
     '=': Operation.EQUAL,
     '!=': Operation.NOT_EQUAL,

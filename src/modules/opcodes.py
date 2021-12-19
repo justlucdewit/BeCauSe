@@ -47,6 +47,7 @@ class Operation:
     LOGICAL_AND = register_operation("LOGICAL AND")
     LOGICAL_OR = register_operation("LOGICAL OR")
     MAXIMUM = register_operation("MAXIMUM")
+    MINIMUM = register_operation("MINIMUM")
     MODULE = register_operation("MODULATION")
     GREATER_EQUAL = register_operation("GREATER_EQUAL")
     SMALLER_EQUAL = register_operation("SMALLER_EQUAL")

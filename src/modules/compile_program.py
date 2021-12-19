@@ -203,6 +203,13 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    cmovs rax, rbx\n")
                 output.write("    push rax\n\n")
 
+            elif opcode['type'] == Operation.MINIMUM:
+                output.write("    pop rax\n")
+                output.write("    pop rbx\n")
+                output.write("    cmp rax, rbx\n")
+                output.write("    cmovg rax, rbx\n")
+                output.write("    push rax\n\n")
+
             elif opcode['type'] == Operation.PRINT:
                 output.write("    pop rdi\n")
                 output.write("    call dump\n\n")

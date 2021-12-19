@@ -121,6 +121,11 @@ def run_program(program):
             b = stack.pop()
             stack.append(max(a, b))
 
+        elif operation['type'] == Operation.MINIMUM:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(min(a, b))
+
         elif operation['type'] == Operation.PRINT:
             print(stack.pop())
 
