@@ -178,5 +178,10 @@
         "test": "t036",
         "expected": "0\n1\n1\n1\n",
         "description": "logical or"
+    },
+    {
+        "test": "t037",
+        "expected": "69\n40\n23\n",
+        "description": "maximum"
     }
 ]
