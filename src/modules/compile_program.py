@@ -196,6 +196,13 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    cmovne rcx, rdx\n")
                 output.write("    push rcx\n\n")
 
+            elif opcode['type'] == Operation.MAXIMUM:
+                output.write("    pop rax\n")
+                output.write("    pop rbx\n")
+                output.write("    cmp rax, rbx\n")
+                output.write("    cmovs rax, rbx\n")
+                output.write("    push rax\n\n")
+
             elif opcode['type'] == Operation.PRINT:
                 output.write("    pop rdi\n")
                 output.write("    call dump\n\n")

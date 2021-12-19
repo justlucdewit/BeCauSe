@@ -116,6 +116,11 @@ def run_program(program):
             b = stack.pop()
             stack.append(int(1 if b or a else 0))
 
+        elif operation['type'] == Operation.MAXIMUM:
+            a = stack.pop()
+            b = stack.pop()
+            stack.append(max(a, b))
+
         elif operation['type'] == Operation.PRINT:
             print(stack.pop())
 
