@@ -1,0 +1,16 @@
+import "std/io"
+
+// Print the argument count
+
+
+// Loop over all arguments
+1 while dup argc < do
+    dup 8 * argv + @64 IO_WRITE_CSTR
+    1 +
+
+    dup argc < if 
+        " " IO_WRITE
+    end
+end
+
+"\n" IO_WRITE

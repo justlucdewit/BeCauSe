@@ -195,5 +195,10 @@
         "description": "argc",
         "arguments": "well hello there world"
     },
+    {
+        "test": "t040",
+        "expected": "Well hello there world\n",
+        "description": "argv",
+        "arguments": "Well hello there world"
     }
 ]
