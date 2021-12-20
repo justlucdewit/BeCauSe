@@ -1,5 +1,6 @@
 from modules.opcodes import MEMORY_CAPACITY, STRING_CAPACITY
 from modules.opcodes import Operation, Keyword
+from modules.argument_parser import rest_args
 from time import sleep
 
 debug = False
