@@ -42,6 +42,12 @@ for test in tests:
     testname = test['test']
     description = test['description']
     expected_result = test['expected']
+    arguments = test.get('arguments')
+
+    if arguments is not None:
+        arguments = arguments.split(' ')
+    else:
+        arguments = []
 
     pi_errors = []
     pc_errors = []
@@ -60,7 +66,8 @@ for test in tests:
 
             # Interpret the script
             result = subprocess.run(
-                [python_executable, 'bcs.py', f'./tests/{testname}.bcs', '-i'],
+                [python_executable, 'bcs.py', f'./tests/{testname}.bcs', '-i']
+                + arguments,
                 capture_output=True)
 
             pi_unix_end = datetime.datetime.now().timestamp()
@@ -102,7 +109,7 @@ for test in tests:
 
             # Run the compiled file
             result = subprocess.run(
-                [f'./tests/{testname}'], capture_output=True)
+                [f'./tests/{testname}'] + arguments, capture_output=True)
 
             pc_unix_end = datetime.datetime.now().timestamp()
 
