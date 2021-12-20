@@ -62,6 +62,7 @@ class Operation:
     SYSCALL5 = register_operation("SYSCALL5")
     SYSCALL6 = register_operation("SYSCALL6")
     ARGC = register_operation("ARGC")
+    ARGV = register_operation("ARGV")
 
     # Memory
     MEM = register_operation("MEM")

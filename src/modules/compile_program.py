@@ -376,6 +376,10 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    mov rax, [argc]\n")
                 output.write("    push rax\n\n")
 
+            elif opcode['type'] == Operation.ARGV:
+                output.write("    mov rax, [argv]\n")
+                output.write("    push rax\n\n")
+
             elif opcode['type'] == Operation.MODULE:
                 output.write("    pop rcx\n")
                 output.write("    pop rax\n")
