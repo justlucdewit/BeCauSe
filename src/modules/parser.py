@@ -53,6 +53,7 @@ BUILTIN_WORDS = {
     'syscall4': Operation.SYSCALL4,
     'syscall5': Operation.SYSCALL5,
     'syscall6': Operation.SYSCALL6,
+    'argc': Operation.ARGC,
     'import': Keyword.IMPORT,
     'memory': Keyword.MEMORY,
     'here': Operation.HERE

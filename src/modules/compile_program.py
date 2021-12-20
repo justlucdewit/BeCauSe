@@ -56,7 +56,13 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
 
         # start the start
         output.write("global _start\n")
-        output.write("_start:\n\n")
+        output.write("_start:\n")
+        output.write("    ; Initialization\n")
+        output.write("    mov rax, [rsp]\n")
+        output.write("    mov [argc], rax\n\n")
+        output.write("    mov rax, rsp\n")
+        output.write("    add rax, 8\n")
+        output.write("    mov [argv], rax\n\n")
 
         strings = []
 
@@ -366,6 +372,10 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                 output.write("    pop r9\n")
                 output.write("    syscall\n\n")
 
+            elif opcode['type'] == Operation.ARGC:
+                output.write("    mov rax, [argc]\n")
+                output.write("    push rax\n\n")
+
             elif opcode['type'] == Operation.MODULE:
                 output.write("    pop rcx\n")
                 output.write("    pop rax\n")
@@ -410,9 +420,11 @@ def compile_program_linux_x86_64(program, out_file_path, debug):
                     list(map(lambda x: str(ord(x)), list(string['data']))))
                 output.write(f"    {string['id']}: db {string_bytes}\n")
 
-        # Create memory segment
+        # Create bss segment
         output.write("\n\nsegment .bss\n")
-        output.write(f"mem: resb {MEMORY_CAPACITY}")
+        output.write(f"mem: resb {MEMORY_CAPACITY}\n")
+        output.write("argc: resb 8\n")
+        output.write("argv: resb 8")
 
     subprocess.call(["nasm", "-felf64", output_asm_name])
 

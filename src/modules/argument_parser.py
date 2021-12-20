@@ -48,4 +48,6 @@ arg_parser.add_argument(
     action='store_true')
 
 # Actually parse the arguments
-args = arg_parser.parse_args(sys.argv[1:])
+args, rest_args = arg_parser.parse_known_args()
+
+rest_args = [sys.argv[0]] + rest_args
