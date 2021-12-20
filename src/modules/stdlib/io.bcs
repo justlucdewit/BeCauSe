@@ -31,3 +31,19 @@ end
 macro IO_EXIT
     60 syscall1
 end
+
+// Usage:
+// <pointer to string> IO_WRITE_CSTR
+//
+// Example:
+// 59 IO_WRITE_CSTR
+macro IO_WRITE_CSTR
+    // While the char is not the null terminator
+    while dup @8 0 != do
+        // Print out the character
+        dup 1 swap IO_WRITE
+        1 +
+    end
+    
+    drop
+end
