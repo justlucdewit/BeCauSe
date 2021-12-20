@@ -188,5 +188,12 @@
         "test": "t038",
         "expected": "45\n22\n23\n",
         "description": "minimum"
+    },
+    {
+        "test": "t039",
+        "expected": "Number of arguments passed: 5\n",
+        "description": "argc",
+        "arguments": "well hello there world"
+    },
     }
 ]
