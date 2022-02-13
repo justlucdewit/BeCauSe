@@ -1,15 +1,16 @@
 import "std/io"
 
 // Print the argument count
-
+"Arguments:\n" IO_WRITE
 
 // Loop over all arguments
 1 while dup argc < do
+    " - " IO_WRITE
     dup 8 * argv + @64 IO_WRITE_CSTR
     1 +
 
     dup argc < if 
-        " " IO_WRITE
+        "\n" IO_WRITE
     end
 end
 

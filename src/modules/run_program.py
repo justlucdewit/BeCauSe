@@ -263,6 +263,9 @@ def run_program(program):
         elif operation['type'] == Operation.ARGC:
             stack.append(len(rest_args))
 
+        elif operation['type'] == Operation.ARGV:
+            pass
+
         elif operation['type'] == Operation.MODULE:
             a = stack.pop()
             b = stack.pop()
