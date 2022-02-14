@@ -12,6 +12,17 @@ def run_program(program):
     ip = 0
     str_size = 0
 
+    # Initialize the stack just like the OS would
+    stack.append(len(rest_args))
+    i = len(rest_args) + 1
+    for arg in rest_args:
+        stack.append(i)
+        i += len(arg) + 1
+
+    # Test the stack
+    print(stack)
+    exit(1)
+
     while ip < len(program):
         operation = program[ip]
 

@@ -4,14 +4,16 @@ import "std/io"
 "Arguments:\n" IO_WRITE
 
 // Loop over all arguments
-1 while dup argc < do
+0 while dup argc < do
+    // Write list line
     " - " IO_WRITE
+
+    // Print n'th terminal argument
     dup 8 * argv + @64 IO_WRITE_CSTR
+
+    // Increment
     1 +
-
-    dup argc < if 
-        "\n" IO_WRITE
-    end
+    
+    // Print new line
+    "\n" IO_WRITE
 end
-
-"\n" IO_WRITE
